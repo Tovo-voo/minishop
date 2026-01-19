@@ -1,0 +1,494 @@
+body {
+  padding-top: 78px;     /* 預留導覽列高度 */
+}
+
+
+.btn {
+	box-shadow: none !important;
+}
+
+.topbar {
+  position: fixed;        /* ✅ 改成 fixed，不是 absolute */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 78px;           /* 原本的 navbar 高度 */
+  background-color: transparent;
+  z-index: 100;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ✅ 新增：在商品分類頁面時，導覽列變白底 */
+body.category-page .topbar {
+  background-color: #fff !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ✅ 導覽列文字在分類頁面時改為深色 */
+body.category-page .topbar .navbar-nav .nav-link {
+  color: #333 !important;
+}
+
+body.category-page .topbar .logo-white {
+  display: none;
+}
+
+body.category-page .topbar .logo-dark {
+  display: block;
+}
+
+
+/* cart導覽列 */
+body.cart-page .topbar {
+  background-color: #fff !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+
+
+.btn-warning {
+	background: #e33324;
+	color: #fff;
+	border-color: #e33324;
+}
+
+.btn-warning:focus {
+	box-shadow: 0 0 0 .2rem rgba(162, 62, 33, 0.5);
+	background: #e33324;
+	color: #fff;
+	border-color: #e33324;
+}
+.btn-warning:hover {
+    color: #fff;
+    background-color: #c75635;
+    border-color: #c75635;
+}
+
+/* 預設 fixed-header：白底 */
+.topbar.fixed-header {
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+body.home-page .topbar.fixed-header {
+	transition: 0.2s ease-in;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	padding-top: 0;
+	background: transparent !important;  /* 永遠透明 */
+	box-shadow: none !important;         /* 不要陰影 */
+	transition: none;                    /* 不要漸變 */
+}
+
+/* ✅ 保持 LOGO、icon 白色 */
+.topbar.fixed-header .navbar a svg {
+	color: #fff !important;
+}
+
+/* ✅ 首頁才變白色，分類頁保持深色 */
+.topbar.fixed-header .top-navbar .navbar-nav > .nav-item > .nav-link {
+	color: #fff !important;
+}
+
+/* ✅ 分類頁面覆蓋：保持深色 */
+body.category-page .topbar .top-navbar .navbar-nav > .nav-item > .nav-link {
+	color: #333 !important;
+}
+
+.topbar .navbar {
+	padding: 0;
+  min-height: 78px;          /* navbar 的高度 */
+  display: flex;
+  align-items: center;       /* 垂直置中 */
+}
+
+.topbar .navbar .navbar-brand {
+	padding: 0;
+	margin: 0;
+	max-height: 78px;
+	line-height: 78px;
+}
+.topbar.fixed-header .navbar .navbar-brand{
+    color: #0e2220;
+}
+
+.topbar.fixed-header .logo-white,
+.topbar .logo-dark{
+    display:none;
+} 
+ .topbar.fixed-header .logo-dark,
+.topbar .logo-white{
+    display: block;
+}
+
+
+.primary-menu .nav-item.dropdown .dropdown-toggle:after{
+    position: absolute;
+    right: 6px;
+    top: 40px;
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-width: 2px 0 0 2px;
+    border-style: solid;
+    border-color:  #fff;
+    transform: rotate(-135deg) translate(0, -50%);
+    transform-origin: top;
+}
+.navbar-dark .navbar-nav .nav-link {
+	color: #fff;
+}
+
+/* ✅ 分類頁面的下拉箭頭改為深色 */
+body.category-page .primary-menu .nav-item.dropdown .dropdown-toggle:after {
+    border-color: #333;
+}
+
+.topbar.fixed-header .primary-menu .nav-item.dropdown .dropdown-toggle:after {
+    border-color: #0e2220;
+}
+.topbar.fixed-header .primary-menu .nav-item.dropdown .dropdown-toggle:hover:after {
+    border-color: #e33324;
+}
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:focus,
+.primary-menu .nav-item.dropdown .dropdown-toggle:hover:after,
+.primary-menu .nav-item.dropdown .dropdown-toggle:focus:after {
+	color: #e33324 !important;
+    border-color: #e33324;
+}
+
+.topbar .top-navbar .navbar-nav>.nav-item>.nav-link {
+	/* line-height: 78px; */
+	padding: 0 24px;
+	font-size: 18px;
+}
+.navbar-toggler .hamburger {
+	height: 25px;
+	width: 25px;
+	position: relative;
+	display: inline-block;
+    margin-right: 15px;
+}
+
+.navbar-dark .navbar-toggler {
+	border: none;
+}
+
+.navbar-toggler .hamburger .hamburger-top,
+.navbar-toggler .hamburger .hamburger-bottom {
+	top: 50%;
+	height: 2px;
+	background: #fff;
+	outline: none;
+	-webkit-transform: rotate(0);
+	transform: rotate(0);
+	-webkit-transform-origin: 50% 50%;
+	transform-origin: 50% 50%;
+	width: 100%;
+	position: absolute;
+	transition: all .3s ease-out;
+}
+
+.navbar-toggler .hamburger .hamburger-top {
+	transform: matrix(1, 0, 0, 1, 0, 4);
+}
+
+.navbar-toggler .hamburger .hamburger-bottom {
+	transform: matrix(1, 0, 0, 1, 0, -4);
+}
+
+.navbar-toggler[aria-expanded="true"] .hamburger .hamburger-top {
+	transform: matrix(0.7071, 0.7071, -0.7071, 0.7071, 0, 0);
+}
+
+.navbar-toggler[aria-expanded="true"] .hamburger .hamburger-bottom {
+	transform: matrix(0.7071, -0.7071, 0.7071, 0.7071, 0, 0);
+}
+
+.nav-item
+
+.nav-link,
+.nav-link:hover {
+	color: #fff;
+	position: relative;
+}
+
+
+
+
+/* === 登入 / 註冊專用頁面 === */
+
+/* ✅ 固定導覽列 */
+.auth-page header.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 70px;
+  background-color: #fff;
+  border-bottom: 1px solid #dee2e6;
+  z-index: 1000;
+}
+
+/* ✅ 主內容：補上導覽列高度 */
+.auth-page main {
+  flex: 1;
+  padding-top: 90px; /* header 高度 + 間距 */
+  padding-bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* ✅ 結構撐滿視窗，footer 貼底 */
+.auth-page .main-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ✅ 表單容器（去掉陰影與邊框） */
+.auth-form-container {
+  max-width: 450px;
+  width: 100%;
+  background-color: transparent; /* 不要白底區塊 */
+  border: none; /* 去掉邊框 */
+  border-radius: 0; /* 去掉圓角 */
+  padding: 20px 0;
+  box-shadow: none; /* ❌ 取消陰影 */
+}
+
+/* ✅ 全局字體設定（你可以微調） */
+body.auth-page {
+  font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+  font-size: 15px; /* 🔹控制全站字體大小 */
+  color: #212529;
+}
+
+/* ✅ 標題樣式 */
+.auth-form-container h3,
+.auth-form-container h4 {
+  font-size: 1.4rem; /* 🔹標題字體大小 */
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* ✅ footer */
+.auth-page footer.footer {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  border-top: 1px solid #dee2e6;
+  margin-top: auto;
+}
+
+/* ✅ footer icon hover 效果 */
+.auth-page .footer-bottom i {
+  color: #6c757d;
+  transition: all 0.2s ease-in-out;
+}
+.auth-page .footer-bottom i:hover {
+  color: #000;
+  transform: scale(1.1);
+}
+
+/* ✅ logo */
+.auth-logo {
+  height: 40px;
+  width: auto;
+}
+
+/* ✅ 連結樣式 */
+.auth-page a {
+  text-decoration: none;
+}
+
+/* ✅ 登入 / 註冊下方提示連結 */
+.auth-page .register-login-text {
+  font-size: 0.95rem;
+  color: #555;
+  margin-top: 16px;
+  text-align: center;
+}
+.auth-page .register-login-text a {
+  color: #0d6efd;
+  font-weight: 600;
+  margin-left: 4px;
+  transition: color 0.2s ease-in-out;
+}
+.auth-page .register-login-text a:hover {
+  color: #0b5ed7;
+  text-decoration: underline;
+}
+
+
+/* ✅ 調整表單輸入框高度與字體 */
+.auth-page .form-control {
+  height: 38px;            /* 改小一點，預設是約 48px */
+  font-size: 14px;         /* 控制輸入框文字大小 */
+  padding: 6px 10px;       /* 內距縮小讓整體更緊湊 */
+  border: 1px solid #ccc;  /* 邊框顏色柔和一點 */
+  border-radius: 4px;      /* 輕微圓角 */
+  box-shadow: none;        /* 移除藍色外框陰影 */
+}
+
+/* ✅ 聚焦時邊框效果 */
+.auth-page .form-control:focus {
+  border-color: #0d6efd;   /* 聚焦時邊框變藍 */
+  box-shadow: none;        /* 不要 Bootstrap 預設的光暈 */
+}
+
+
+
+
+
+/* fullpage的hero區塊 */
+/* 全頁區塊通用設定 */
+.section {
+  height: calc(100vh - 78px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  transition: color 0.3s ease;
+}
+
+/* 各區塊背景圖 */
+.hero-section {
+  background-image: url("../images/banner.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.hero2-section {
+  background-image: url("../images/home/women4_fix.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.hero3-section {
+  background-image: url("../images/home/women2_fix.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.hero4-section {
+  background-image: url("../images/home/women1_fix.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+
+
+
+/* === fullPage 文字區塊樣式 === */
+
+/* 全域設定 */
+.section {
+  position: relative;
+  height: 100vh;
+  background-size: cover;
+  background-position: center;
+}
+
+/* ✅ Hero 文字容器（控制整體位置） */
+.section > div {
+  position: absolute;
+  left: 8%;          /* 往左邊貼一點（Uniqlo 約8~10%）*/
+  bottom: 18%;       /* 稍微往上，不要貼到底部 */
+  text-align: left;  /* 改為靠左對齊 */
+  color: #1b1e1f;    /* 預設黑字 */
+}
+
+/* ✅ 主標題（類似 Uniqlo 粗體） */
+.section h1 {
+  font-size: 2.25rem;       /* 🔹 約 36px，比原來 48px 小一階 */
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 0.8rem;
+  line-height: 1.3;
+}
+
+/* ✅ 次標題 */
+.section p {
+  font-size: 1rem;          /* 🔹 約 16px，更柔和 */
+  margin-bottom: 0.3rem;
+  font-weight: 400;
+}
+
+/* ✅ 按鈕樣式（保持乾淨） */
+.section .btn {
+  margin-top: 1.5rem;
+  padding: 10px 26px;
+  border-radius: 2px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* ✅ 白底按鈕 + 黑字（像 Uniqlo） */
+.section .btn-light {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  transition: all 0.2s ease-in-out;
+}
+.section .btn-light:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+/* ✅ 紅色按鈕（for LOGIN / 強調） */
+.section .btn-danger {
+  background-color: #e33324;
+  border: none;
+  color: #fff;
+}
+.section .btn-danger:hover {
+  background-color: #c42d1d;
+}
+
+/* ✅ 深色背景（第2、3區）時自動變白字 */
+[data-theme="dark"] {
+  color: #fff;
+}
+[data-theme="dark"] h1,
+[data-theme="dark"] p {
+  color: #fff;
+}
+
+
+
+
+
+/* 使用者選單樣式 */
+.nav-link i {
+  color: inherit;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover i {
+  color: #e33324;
+}
+
+/* 購物車徽章 */
+.badge {
+  font-size: 10px;
+  padding: 2px 5px;
+}
+
+/* 下拉選單 */
+.dropdown-menu {
+  min-width: 160px;
+}
+
+/* 分類頁面時的圖示顏色 */
+body.category-page .nav-link i,
+body.cart-page .nav-link i {
+  color: #333;
+}
+
+body.category-page .nav-link:hover i,
+body.cart-page .nav-link:hover i {
+  color: #e33324;
+}

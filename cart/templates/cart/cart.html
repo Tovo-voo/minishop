@@ -1,0 +1,135 @@
+<!-- 購物車 -->
+{% extends "core/base.html" %}
+{% load static %}
+{% load humanize %}
+
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+
+{% endblock extra_head %}
+
+{% block body_class %}cart-page{% endblock %}
+
+{% block category_nav %}
+<ul class="navbar-nav ms-auto primary-menu"></ul>
+{% endblock category_nav %}
+
+{% block content %}
+<div class="checkout-steps">
+  <div class="step active">
+    <span class="step-number">1</span>
+    <span class="step-text">Shopping Cart</span>
+  </div>
+
+  <div class="step">
+    <span class="step-number">2</span>
+    <span class="step-text">Confirm Order</span>
+  </div>
+
+  <div class="step">
+    <span class="step-number">3</span>
+    <span class="step-text">Order Completed</span>
+  </div>
+</div>
+
+<div class="cart-product-area mt-100">
+  <div class="container">
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="cart-product-details-wrap cart-product-details-wrap-responsive">
+              <table class="table">
+                  <thead>
+                    <tr>
+                        <th>Product </th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Product</th>
+                        <td>
+                          <div class="cart-product-img-wrap">
+                              <div class="single-cart-product-box">
+                                <div class="single-cart-img">
+                                    <!-- 為什麼image後面要接url?  因為那才是瀏覽器真的能用的網址
+                                         item.product.image是 ImageField物件 -->
+                                    <img src="{{ item.product.image.url }}" alt="">
+                                    <p>{{ item.product.name }}</p>
+                                </div>
+                                <div class="single-cart-product-x-icon">
+                                    <a href="{% url 'removecart' item.product.id %}"><i class='bx bx-x'></i></a>
+                                </div>
+                              </div>
+                          </div>
+                        </td>
+                        <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Price</th>
+                        <td>${{ item.product.price_int|intcomma }}</td>
+                        <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Quantity</th>
+                        <td>
+                          <div class="quantity cart-quantity buttons_added">
+                            <a href="{% url 'merge' item.product.id 'minus' %}" class="minus " type="button">−</a>
+                            <span type="button" class="quantity input-text qty text">{{ item.quantity }}</span>
+                            <a href="{% url 'merge' item.product.id 'plus' %}" class="plus" type="button">+</a>
+                        </td>
+                        <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Subtotal</th>
+                        <td class="subtotal">${{ item.subtotal|intcomma }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+            </div>
+        </div>
+      </div>
+      <div class="row mt-50 justify-content-between">
+        <div class="col-xl-4 col-lg-5 col-md-12 col-sm-12 col-12">
+            <div class="error-search apply-copon text-center">
+              <form action="#">
+                  <input type="text" placeholder="Type coupon code"><button>Apply Coupon</button>
+              </form>
+            </div>
+        </div>
+        <div class="col-xl-6 col-lg-7 col-md-12 col-sm-12 col-12 both-small-50">
+            <div class="cart-total-wrap">
+              <div class="cart-total-title">
+                  <h4>Cart Total</h4>
+              </div>
+              <div class="cart-total-body">
+                  <ul>
+                    <li>Subtotal<span id="cart-total">${{ total|intcomma }}</span></li>
+                    <li>
+                        <div class="cart-total-body-title">Shipping:</div>
+                    </li>
+                    <li>Flat rate:<span>$50.00</span></li>
+                    <li>Shipping to MA.</li>
+                    <li class="click-address">
+                      <div class="cart-total-body-title cart-total-body-title-two">Change Shipping Address:</div>
+                      <span class="click-address-here"><i class='bx bxs-down-arrow'></i></span>
+                      <div class="cart-address-change-wrap">
+                        <p>Digital Agency Network 20 Eastbourne Terrace, London</p>
+                        <p>Morbi aliquam Network 4 Eastbourne Terrace, London</p>
+                      </div>
+                    </li>
+                    <li>Total<span id="cart-total">${{ total|intcomma }}</span></li>
+                    <li>
+                      <div class="update-cart-content-wrap">
+                        <p><a href="#">Update Cart</a></p>
+                        <form method="get" action="{% url 'orders:checkout' %}">
+                          <button type="submit" class="common-btn shop-details-review-btn update-cart-content-btn">Proceed To Checkout</button>
+                        </form>
+                      </div>
+                    </li>
+                  </ul>
+              </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+
+<script src="{% static 'js/cart.js' %}"></script>
+{% endblock content %}

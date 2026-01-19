@@ -1,0 +1,106 @@
+<!-- 這是分類的模板 -->
+{% extends 'core/base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block title %}{{ category.name }}{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/product.css' %}">
+
+{% endblock extra_head %}
+
+<!-- ✅ 新增這個 block，給 body 加上 class -->
+{% block body_class %}category-page{% endblock %}
+
+{% block content %}
+
+
+
+<!-- 🧭 細分類列（在導覽列下方、Hero 上方） -->
+<div id="subNav" class="sub-nav">
+  <div class="container d-flex justify-content-center gap-4">
+    <a href="#" class="active">所有T恤</a>
+    <a href="#">設計上衣</a>
+    <a href="#">休閒針織衫</a>
+    <a href="#">大學T</a>
+    <a href="#">POLO衫</a>
+  </div>
+</div>
+
+
+<!-- 🖼 Hero 大卡圖區（滿版） -->
+<div class="hero-banner">
+  <div class="hero-img-wrap">
+    {% if category.banner %}
+      <img src="{{ category.banner.url }}" alt="{{ category.name }}" class="hero-img">
+    {% else %}
+      <img src="{% static 'images/banner/default.jpg' %}" alt="{{ category.name }}">
+    {% endif %}
+  </div>
+  <div class="hero-text">
+    <h1>{{ category.name }}</h1>
+    <p>94T</p>
+  </div>
+</div>
+
+
+
+<!-- 🛍 商品展示區 -->
+<section class="home-one-best-product-area mt-5 mb-5">
+  <div class="container">
+    <div class="row g-4">
+      {% for product in products %}
+      <div class="col-xl-3 col-lg-4 col-md-6 col-sm-12">
+        <div class="home-one-product-box">
+          <div class="home-one-product-img">
+            {% if product.image %}
+              <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% else %}
+              <img src="{% static 'images/no_image.jpg' %}" alt="No image">
+            {% endif %}
+
+
+            <!-- ✅ 標籤（先檢查欄位是否存在） -->
+            {% if product.is_new %}
+              <div class="home-one-product-img-cta">
+                <span>New</span></div>
+            {% elif product.discount %}
+              <div class="home-one-product-img-cta home-one-product-img-cta-design-two">
+                <span>{{ product.discount }}% Off</span></div>
+            {% endif %}
+            
+
+            <!-- ✅ 按鈕 -->
+            <div class="home-one-product-option">
+              <ul>
+                <li><a href="#"><i class='bx bx-refresh'></i></a></li>
+                <li><a href="#"><i class='bx bxs-heart'></i></a></li>
+                <li><a href="{% url 'add_cart' product.id %}"><i class='bx bx-cart-alt'></i></a></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="home-one-product-content text-start mt-3">
+            <h5 class="fw-semibold">{{ product.name }}</h5>
+            <div class="home-one-product-price-list">
+              <ul>
+                <li>NT${{ product.price_int|intcomma }}</li>
+                {% if product.old_price %}
+                  <li><del>NT${{ product.old_price }}</del></li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- ✅ 引入 JS -->
+<script src="{% static 'js/product.js' %}"></script>
+
+{% endblock content %}

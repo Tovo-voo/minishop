@@ -1,0 +1,76 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}登入基底{% endblock %}</title>
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <!-- 載入 Font Awesome 圖示 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+</head>
+
+<body class="auth-page">
+
+  <!-- 整個頁面最外層容器 -->
+  <div class="main-wrapper">
+
+    <!-- 導覽列固定在頂部 -->
+    <header class="topbar">
+      <div class="container d-flex justify-content-between align-items-center h-100">
+
+        <!-- 左邊或中間的 LOGO -->
+        <a class="navbar-brand m-0" href="/">
+          <img src="{% static 'images/logo-dark.png' %}" class="auth-logo" alt="logo">
+        </a>
+        
+        <!-- 右邊的圖示 (購物車、個人按鈕、追蹤清單) -->
+        <div class="d-flex align-items-center gap-3">
+          <a href="#" class=text-dark><i class="fa-regular fa-heart"></i></a>
+          <a href="{% url 'cart' %}" class=text-dark><i class="fa-solid fa-cart-shopping fa-lg"></i></a>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主內容 (登入/註冊表單)-->
+    <main class="flex-fill">    <!-- 撐開中間的空間 -->
+      {% block content %}{% endblock content %}
+    </main>
+
+    <!-- 頁腳 -->
+    <footer class="footer small text-muted">   <!-- mt-auto 讓 footer貼底 -->
+
+      <!-- 上方灰底連結列 -->
+      <div class="footer-top py-2 bg-light border-top">
+        <div class="container text-center">
+          <div class="container text-center">
+            <ul class="list-inline mb-1 text-center">
+                <li class="list-inline-item mx-2"><a href="#" class="text-muted text-decoration-none">常見問題</a></li>
+                <li class="list-inline-item mx-2"><a href="#" class="text-muted text-decoration-none">聯絡我們</a></li>
+                <li class="list-inline-item mx-2"><a href="#" class="text-muted text-decoration-none">隱私權政策</a></li>
+                <li class="list-inline-item mx-2"><a href="#" class="text-muted text-decoration-none">退換貨政策</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- 下方社群與版權 -->
+      <div class="footer-bottom py-2 border-top text-center">
+        <div class="mb-1">
+          <a href="#" class="text-muted me-3"><i class="fa-brands fa-facebook fa-2x"></i></a>
+          <a href="#" class="text-muted me-3"><i class="fa-brands fa-instagram fa-2x"></i></a>
+          <a href="#" class="text-muted me-3"><i class="fa-brands fa-youtube fa-2x"></i></a>
+          
+        </div>
+        <div class="small">Copyright © 2025 ROYAL. All rights reserved.</div>
+      </div>
+    </footer>
+  </div>
+
+
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>

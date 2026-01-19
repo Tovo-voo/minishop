@@ -1,0 +1,55 @@
+{% extends "core/base.html" %}
+{% load static %}
+
+{% block body_class %}home-page{% endblock %}
+{% block content %}
+
+<!-- ✅ Hero 區塊 -->
+<div id="fullpage">
+
+  <!-- 第一頁 -->
+  <div class="section hero-section" data-theme="dark">
+    <div>
+      <h1 class="fw-bold display-3">衣起開新 FUN 假去</h1>
+      <p class="fs-4 mt-3">新品登場優惠 GO 限定好禮送</p>
+      <a href="#" class="btn btn-light btn-lg mt-4">立即選購</a>
+    </div>
+  </div>
+
+
+  <!-- 第二頁 -->
+  <div class="section hero2-section" data-theme="light">
+    <div>
+      <h1 class="fw-bold display-3">短版系列</h1>
+      <p class="fs-4 mt-3">細緻光纖感</p>
+      <p class="fs-4 mt-3">溫和閃爍，時尚兼備</p>
+    </div>
+  </div>
+
+  <!-- 第三 -->
+  <div class="section hero3-section" data-theme="dark">
+    <div>
+      <h1 class="fw-bold display-3">丹寧系列</h1>
+      <p class="fs-4 mt-3">不退流行的經典</p>
+      <p class="fs-4 mt-3">就是最簡單的時尚</p>
+    </div>
+  </div>
+
+  <!-- 第四 -->
+  <div class="section hero4-section" data-theme="light">
+    <div>
+      <h1 class="fw-bold display-3">高腰質感長褲</h1>
+      <p class="fs-4 mt-3">舒適布料×修身線條</p>
+      <p class="fs-4 mt-3">低調的日常單品</p>
+    </div>
+  </div>
+
+</div>
+
+{% endblock content%}
+
+
+{% block fullpage_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.31/fullpage.min.js"></script>
+<script src="{% static 'js/fullpage-init.js' %}"></script>
+{% endblock fullpage_js %}

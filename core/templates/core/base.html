@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}基底{% endblock %}</title>
+
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/animate.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/4.0.31/fullpage.min.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock extra_head %}
+</head>
+
+<body class="{% block body_class %}{% endblock %}">
+  <!-- ✅ 導覽列固定在畫面最上方 -->
+  <header class="topbar {% block topbar_class %}{% endblock topbar_class %}">
+    <div class="container">
+      <div class="header">
+        <nav class="navbar navbar-expand-lg navbar-dark top-navbar">
+          <a class="navbar-brand" href="/">
+            <img src="{% static 'images/logo1.png' %}" class="logo logo-white" alt="logo">
+            <img src="{% static 'images/logo-dark.png' %}" class="logo logo-dark" alt="logo">
+          </a>
+
+          <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapsible-menu" aria-controls="collapsible-menu"
+                  aria-expanded="false" aria-label="Toggle navigation">
+            <span class="hamburger">
+              <span class="hamburger-top"></span>
+              <span class="hamburger-bottom"></span>
+            </span>
+          </button>
+          
+
+          <!-- ✅ 這裡從資料庫抓分類 -->
+          <div class="collapse navbar-collapse" id="collapsible-menu">
+            <!-- 分類選單 -->
+            {% block category_nav %}
+            <ul class="navbar-nav ms-auto primary-menu">  <!-- 導覽列容器-->
+              {% for category in categories %}            <!-- 逐一顯示每個父類 -->
+                <li class="nav-item dropdown">            <!-- nav-item是Bootstrap內建樣式，用在導覽列的每一個項目。dropdown代表這個項目會有「下拉式選單」-->
+                  <a class="nav-link" href="{% url 'category_products' category.slug %}" 
+                    id="{{ category.slug }}-menu" data-bs-toggle="dropdown" aria-expanded="false">
+                    {{ category.name }}       <!-- 顯示父類的名稱-->
+                  </a>
+
+
+                  <!-- 下拉式選單內容-->
+                  <ul class="dropdown-menu p-0" aria-labelledby="{{ category.slug }}-menu">
+                    {% for sub in category.subcategories.all %}
+                      <li>
+                        <a class="dropdown-item" href="{% url 'category_products' sub.slug %}">
+                          {{ sub.name }}
+                        </a>
+                      </li>
+                    {% empty %}
+                      <li><a class="dropdown-item disabled" href="#">尚無子分類</a></li>
+                    {% endfor %}
+                  </ul>
+                </li>
+              {% endfor %}
+            </ul>
+            {% endblock category_nav %}
+
+
+            <!-- ✅ 使用者選單區 -->
+            <div class="d-flex align-items-center gap-3 ms-3">
+              {% if request.user.is_authenticated %}
+                <!-- 購物車圖示 -->
+                <a href="{% url 'cart' %}" class="nav-link position-relative">
+                  <i class='bx bx-cart-alt' style='font-size: 24px;'></i>
+                  <!-- 購物車數量徽章(之後實作) -->
+                  <span id="cart-count" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ cart_count }}
+                  </span>
+                </a>
+                
+                <!-- 使用者下拉選單 -->
+                <div class="dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="userMenu" 
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class='bx bx-user' style='font-size: 24px;'></i>
+                    {{ request.user.username }}
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                    <li><a class="dropdown-item" href="#">我的帳戶</a></li>
+                    <li><a class="dropdown-item" href="#">訂單記錄</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">登出</a></li>
+                  </ul>
+                </div>
+              {% else %}
+                <!-- 未登入:顯示登入按鈕 -->
+                <a href="{% url 'login' %}" class="btn btn-warning py-2 px-4">LOGIN</a>
+              {% endif %}
+            </div>
+          </div>      
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  
+  <main>
+    {% block content %}{% endblock content %}
+  </main>
+
+
+
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- ✅ fullPage.js 只在首頁載入 -->
+  {% block fullpage_js %}{% endblock fullpage_js %}
+
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'js/custom.js' %}"></script>
+  {% block extra_js %}{% endblock extra_js %}
+
+</body>
+</html>

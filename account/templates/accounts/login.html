@@ -1,0 +1,29 @@
+{% extends "core/base_auth.html" %}
+{% load static %}
+
+{% block title %}會員登入{% endblock title %}
+{% block content %}
+<div class="auth-form-container">
+  <h4 class="mb-4 text-center">會員登入</h4>
+  <form method="POST" novalidate>
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="username" class="form-label">帳號</label>   
+      <input type="text" id="username" name="username" class="form-control" placholder="請輸入帳號" reqiured>
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">密碼</label>
+      <input type="text" id="password" name="password" class="form-control" placholder="請輸入密碼" reqiured>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100 py-2">登入</button>
+
+    <p class="register-login-text mt-3">還沒有帳號?
+      <a href="{% url 'register' %}">註冊</a>
+    </p>
+  </form>
+</div>
+
+{% endblock content %}
