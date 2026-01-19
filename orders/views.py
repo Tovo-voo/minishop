@@ -29,6 +29,23 @@ def checkout_view(request):
     total = sum(item['subtotal'] for item in cart_items)
 
 
+    # 取出使用者所有地址(反向，從外鍵查找address)
+    addresses = request.user.addresses.all()
+
+    # 目前選擇的地址
+    selected_address_id = request.session.get("shipping_address_id")    # id是創建地址的id
+
+
+    # 如果 session 沒選地址，自動使用預設地址
+    # 這邊的is_default是Address model裡的欄位，addresses是Address的查詢集(QuerySet)
+    # Django ORM允許用「欄位名稱=條件」來篩選
+    if not selected_address_id:
+        default_address = addresses.filter(is_default=True).first()
+        if default_address:
+            request.session['shipping_address_id'] = default_address.id
+            selected_address_id = default_address.id
+
+
     # 一定要有選好的地址(cart_view已經鋪好了)
     address_id = request.session.get("shipping_address_id")
     if not address_id:

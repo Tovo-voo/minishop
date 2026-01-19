@@ -242,3 +242,13 @@ dropdowns.forEach(dropdown => {
 
 
 
+
+
+
+function openAddAddress() {
+  document.getElementById('addAddressModal').style.display = 'block';
+}
+function closeAddAddress() {
+  document.getElementById('addAddressModal').style.display = 'none';
+}
+

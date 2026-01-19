@@ -28,25 +28,11 @@ def cart_view(request):
     total = sum(item['subtotal'] for item in cart_items)    # 計算全部商品的總價
 
 
-    # 取出使用者所有地址(反向，從外鍵查找address)
-    addresses = request.user.addresses.all()
 
-    # 目前選擇的地址
-    selected_address_id = request.session.get("shipping_address_id")    # id是創建地址的id
-
-
-    # 如果 session 沒選地址，自動使用預設地址
-    if not selected_address_id:
-        default_address = addresses.filter(is_default=True).first()
-        if default_address:
-            request.session['shipping_address_id'] = default_address.id
-            selected_address_id = default_address.id
 
     return render(request, 'cart/cart.html', {
         'cart_items':cart_items,
         'total':total,
-        'addresses':addresses,
-        'selected_address_id':selected_address_id
     })
 
 

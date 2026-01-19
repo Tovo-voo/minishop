@@ -492,3 +492,36 @@ body.category-page .nav-link:hover i,
 body.cart-page .nav-link:hover i {
   color: #e33324;
 }
+
+
+
+
+
+/* modal 背景 (add_address) */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+/* 白色視窗 */
+.modal-content {
+  width: 500px;
+  background: #fff;
+  margin: 5% auto;
+  padding: 24px;
+  position: relative;
+}
+
+/* 關閉按鈕 */
+.close-btn {
+  position: absolute;
+  right: 16px;
+  top: 12px;
+  border: none;
+  background: none;
+  font-size: 24px;
+  cursor: pointer;
+}

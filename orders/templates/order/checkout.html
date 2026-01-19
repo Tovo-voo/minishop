@@ -1,4 +1,4 @@
-<!-- 二次確認訂單 -->
+<!-- 二次確認訂單、選地址 -->
 {% extends "core/base.html" %}
 {% load static %}
 {% load humanize %}
@@ -34,6 +34,13 @@
     <span class="step-text">Order Completed</span>
   </div>
 </div>
+
+
+<button type="button" onclick="openAddAddress()">
+  新增收貨地址
+</button>
+{% include "accounts/partials/add_address.html" %}
+
 
 
 <div class="cart-product-area mt-100">
