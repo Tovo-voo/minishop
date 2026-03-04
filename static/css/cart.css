@@ -19,7 +19,7 @@ body.cart-page .topbar .logo-dark {
 
 
 
-/* ✅ 新增：在商品分類頁面時，導覽列變白底 */
+/* 沿用商品類導覽列 */
 body.checkout-page .topbar {
   background-color: #fff !important;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -96,6 +96,82 @@ body.checkout-page .checkout-summary {
 
 
 
+/* 付款、取件放式 */
+.shipping-section {
+    padding-top: 40px;
+    border-top: 1px solid #eee;
+}
+
+.payment-section {
+    padding-top: 40px;
+    border-top: 1px solid #eee;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #000;
+}
+
+.custom-radio {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    cursor: pointer;
+    position: relative;
+}
+
+/* 隱藏原生 radio */
+.custom-radio input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* 自訂圓圈 */
+.radio-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #d0d0d0;
+  border-radius: 50%;
+  margin-right: 10px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+/* 選中時的內圈 */
+.custom-radio input[type="radio"]:checked + .radio-custom::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #000;
+  border-radius: 50%;
+}
+
+/* 選中時外圈變黑 */
+.custom-radio input[type="radio"]:checked + .radio-custom {
+  border-color: #000;
+}
+
+.radio-text {
+  font-size: 14px;
+  color: #333;
+}
+
+/* Hover 效果 */
+.custom-radio:hover .radio-custom {
+  border-color: #666;
+}
+
+
+
+
 
 /* cart */
 .single-cart-product-box {
@@ -136,6 +212,8 @@ body.checkout-page .checkout-summary {
     height: auto;
     object-fit: cover;
 }
+
+
 
 
 .cart-product-details-wrap {
@@ -430,4 +508,649 @@ body.checkout-page .checkout-summary {
 .update-cart-content-btn {
     border-radius: unset;
     padding: 15px 39px
+}
+
+
+
+
+
+
+/* 711選擇門市按鈕 */
+.btn-select-store {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #fff;
+  border: 1px solid #000;
+  color: #000;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.3s;
+}
+
+.btn-select-store:hover {
+  background-color: #000;
+  color: #fff;
+}
+
+.btn-change-store {
+  padding: 8px 16px;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #333;
+  font-size: 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.btn-change-store:hover {
+  background-color: #e0e0e0;
+}
+
+#selected-store-info {
+  padding: 15px;
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+#selected-store-info p {
+  margin: 5px 0;
+  font-size: 14px;
+}
+
+
+
+
+/* ========== 結帳區塊 ========== */
+.checkout-section {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+/* ========== Radio 群組 ========== */
+.radio-group {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 15px;
+}
+
+.custom-radio {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.custom-radio input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+}
+
+.radio-custom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d0d0d0;
+  border-radius: 50%;
+  margin-right: 10px;
+  position: relative;
+  transition: all 0.2s;
+}
+
+.custom-radio input[type="radio"]:checked + .radio-custom {
+  border-color: #000;
+}
+
+.custom-radio input[type="radio"]:checked + .radio-custom::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #000;
+  border-radius: 50%;
+}
+
+.radio-text {
+  color: #333;
+  font-weight: 500;
+}
+
+/* ========== 付款說明 ========== */
+.payment-note {
+  font-size: 13px;
+  color: #666;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+}
+
+/* ========== 資訊區塊 ========== */
+.info-box {
+  background-color:white;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 30px;
+}
+
+/* ========== 表單樣式 ========== */
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.required {
+  color: #e74c3c;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.address-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.city-group {
+  flex: 0 0 30%;
+}
+
+.district-group {
+  flex: 1;
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #333;
+  transition: all 0.3s;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.05);
+}
+
+select.form-control {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+  line-height: 1.6;
+}
+
+/* ========== 按鈕 ========== */
+.btn-select-store {
+  padding: 12px 30px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-select-store:hover {
+  background-color: #333;
+}
+
+.btn-change {
+  padding: 8px 20px;
+  background-color: #fff;
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn-submit {
+  padding: 15px 60px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #333;
+}
+
+/* ========== 資訊卡片 ========== */
+.info-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 10px;
+}
+
+.info-item {
+  font-size: 14px;
+  color: #555;
+  margin: 8px 0;
+}
+
+/* ========== 訂單摘要 ========== */
+.order-summary {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 6px;
+  margin-top: 20px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  font-size: 14px;
+}
+
+.summary-row.total {
+  border-top: 2px solid #ddd;
+  margin-top: 10px;
+  padding-top: 15px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.checkout-actions {
+  text-align: center;
+  margin: 30px 0;
+}
+
+/* ========== 響應式 ========== */
+@media (max-width: 768px) {
+  .radio-group {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .address-row,
+  .form-row {
+    flex-direction: column;
+  }
+  
+  .city-group,
+  .district-group {
+    flex: 1;
+  }
+}
+
+
+
+
+
+
+
+
+/* ========== 地址選擇區塊（無邊框）========== */
+.address-selection {
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-top: 20px;
+}
+
+.address-title {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.address-notice {
+  margin-top: 8px;
+}
+
+.address-selection .notice-word {
+  color: #ff0000;
+  font-size: 13px;
+}
+
+/* 標題列：左右兩端 */
+.address-header {
+  display: flex;
+  justify-content: space-between;  /* ⭐ 左右兩端 */
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 0;
+  background: transparent;
+}
+
+.address-header h4 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #000;
+}
+
+/* ⭐ 新增地址連結（純文字，紅色，無邊框）*/
+.add-address-link {
+  margin-left: 10px;
+  font-size: 13px;
+  color: #00a0e9;
+  text-decoration: none;
+}
+
+/* 地址列表容器 */
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ⭐ 隱藏第2筆以後的地址 */
+.address-list:not(.show-all) .address-item:nth-child(n+2) {
+  display: none;
+}
+
+/* 地址項目 */
+.address-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 20px 0;
+  background: transparent;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin: 0;
+}
+
+.address-item:last-child {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.address-item:hover {
+  background: #f9f9f9;
+}
+
+/* Radio 按鈕 */
+.address-item input[type="radio"] {
+  margin-right: 15px;
+  margin-top: 3px;
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+/* 地址內容 */
+.address-content {
+  flex: 1;
+  line-height: 1.6;
+}
+
+.address-info {
+  margin-bottom: 5px;
+}
+
+.address-info strong {
+  font-size: 15px;
+  margin-right: 10px;
+  color: #000;
+  font-weight: 600;
+}
+
+.address-info .phone {
+  color: #666;
+  font-size: 14px;
+}
+
+.address-detail {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ⭐ 更多地址（藍色文字連結）*/
+.more-addresses {
+  text-align: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.more-addresses-link {
+  color: #0066cc;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 400;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.3s;
+}
+
+.more-addresses-link:hover {
+  text-decoration: underline;
+}
+
+#toggle-text::after {
+  content: ' ▼';
+}
+
+.address-list.show-all ~ .more-addresses .more-addresses-link #toggle-text::after {
+  content: ' ▲';
+}
+
+/* ========== 沒有地址時（完全無邊框）========== */
+.no-address-prompt {
+  text-align: center;
+  padding: 60px 20px;
+  background: transparent;
+  border: none;
+  margin-top: 20px;
+}
+
+.no-address-prompt p {
+  margin-bottom: 25px;
+  color: #666;
+  font-size: 14px;
+}
+
+/* ⭐ 新增地址按鈕（沒有地址時，這個可以是按鈕）*/
+.btn-add-address {
+  display: inline-block;
+  padding: 12px 40px;
+  background: #e74c3c;
+  color: white !important;
+  text-decoration: none;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s;
+  border: none;
+}
+
+.btn-add-address:hover {
+  background: #c0392b;
+  text-decoration: none;
+}
+
+/* ========== Modal 樣式 ========== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal.show {
+  display: flex !important;
+}
+
+.modal-content {
+  background: #fff;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 25px;
+  border-bottom: 1px solid #ddd;
+  background: #fafafa;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.modal-close {
+  font-size: 28px;
+  cursor: pointer;
+  color: #999;
+  background: none;
+  border: none;
+  padding: 0;
+  line-height: 1;
+  transition: color 0.3s;
+}
+
+.modal-close:hover {
+  color: #000;
+}
+
+.modal-body {
+  padding: 25px;
+}
+
+.modal-body .form-group {
+  margin-bottom: 20px;
+}
+
+.modal-body .form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.modal-body .required {
+  color: #e74c3c;
+}
+
+.modal-body .form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.3s;
+}
+
+.modal-body .form-control:focus {
+  outline: none;
+  border-color: #e74c3c;
+}
+
+.modal-body .form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.btn-save-address {
+  width: 100%;
+  padding: 15px;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s;
+}
+
+.btn-save-address:hover {
+  background: #c0392b;
+}
+
+/* ========== 響應式設計 ========== */
+@media (max-width: 768px) {
+  .address-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .modal-content {
+    width: 95%;
+  }
+  
+  .modal-body .form-row {
+    grid-template-columns: 1fr;
+  }
 }

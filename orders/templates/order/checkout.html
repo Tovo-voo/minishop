@@ -36,79 +36,233 @@
 </div>
 
 
-<button type="button" onclick="openAddAddress()">
-  新增收貨地址
-</button>
-{% include "accounts/partials/add_address.html" %}
-
-
-
 <div class="cart-product-area mt-100">
   <div class="container">
-    <div class="row">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-        <div class="cart-product-details-wrap cart-product-details-wrap-responsive">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Product </th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              {% for item in cart_items %}
-                <tr>
-                  <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Product</th>
-                    <td>
-                      <div class="cart-product-img-wrap">
-                        <div class="single-cart-product-box">
-                          <div class="single-cart-img">
-                            <!-- 為什麼image後面要接url?  因為那才是瀏覽器真的能用的網址
-                            item.product.image是 ImageField物件 -->
-                            <img src="{{ item.product.image.url }}" alt="">
-                              <p>{{ item.product.name }}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </td>
-                    <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Price</th>
-                    <td>${{ item.product.price_int|intcomma }}</td>
-                    <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Quantity</th>
-                    <td>
-                      <div class="quantity cart-quantity buttons_added">
-                        <span>{{ item.quantity }}</span>
-                      </div>
-                    </td>
-                      <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Subtotal</th>
-                      <td class="subtotal">${{ item.subtotal|intcomma }}</td>
-                    </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+    <form method="POST" action="{% url 'orders:checkout' %}">
+      {% csrf_token %}
+
+      <!-- 配送方式 -->
+      <div class="checkout-section">
+        <h4 class="section-title">Choose a delivery method</h4>
+
+        <div class="radio-group">
+          <label class="custom-radio">
+            <input type="radio" name="delivery_method" value="711" id="delivery-711" checked onchange="handleDeliveryChange()">  
+            <span class="radio-custom"></span>
+            <span class="radio-text">7-11</span>
+          </label>
+          
+          <label class="custom-radio">
+            <input type="radio" name="delivery_method" value="home_delivery" id="delivery-home" onchange="handleDeliveryChange()">
+            <span class="radio-custom"></span>
+            <span class="radio-text">Home Delivery</span>
+          </label>
         </div>
       </div>
-    </div>
-  </div>
 
+      <!-- 付款方式 -->
+      <div class="checkout-section">
+        <h3 class="section-title">Choose a payment method</h3>
 
+        <!-- 7-11 的付款方式（預設顯示） -->
+        <div id="payment-711" class="payment-options">
+          <div class="radio-group">
+            <label class="custom-radio">
+              <input type="radio" name="payment_method" value="cod" id="payment-cod" checked onchange="handlePaymentChange()">
+              <span class="radio-custom"></span>
+              <span class="radio-text">Cash On Delivery</span>
+            </label>
+
+            <label class="custom-radio">
+              <input type="radio" name="payment_method" value="credit_card" id="payment-credit-711" onchange="handlePaymentChange()">
+              <span class="radio-custom"></span>
+              <span class="radio-text">CreditCard</span>
+            </label>
+          </div>  
+        </div>
+
+        <!-- 宅配的付款方式（預設隱藏） -->
+        <div id="payment-home" class="payment-options" style="display:none;">
+          <div class="radio-group">
+            <label class="custom-radio">
+              <input type="radio" name="payment_method" value="credit_card" id="payment-credit-home" checked>
+              <span class="radio-custom"></span>
+              <span class="radio-text">CreditCard</span>
+            </label>
+          </div>
+          <p class="payment-note">宅配僅提供信用卡付款</p>
+        </div>
+      </div>
+
+      <!-- 配送資訊 -->
+      <div class="checkout-section">
+        <h3 class="section-title">配送資訊</h3>
+
+        <!-- 7-11 門市選擇 -->
+        <div id="info-711-store" class="info-box">
+          <button type="button" class="btn-select-store" onclick="open711Map()">
+            請選擇取貨門市
+          </button>
+
+          <!-- 顯示已選擇的門市 -->
+          <div id="selected-store-info" style="display:none; margin-top:15px;">
+            <div class="info-card">
+              <p class="info-label">已選擇門市</p>
+              <p class="info-item"><strong>門市名稱：</strong><span id="display-store-name"></span></p>
+              <p class="info-item"><strong>門市地址：</strong><span id="display-store-address"></span></p>
+              <button type="button" onclick="clearStore()" class="btn-change">重新選擇</button>
+            </div>
+          </div>
+
+          <!-- 隱藏欄位 -->
+          <input type="hidden" name="store_id" id="store_id">
+          <input type="hidden" name="store_name" id="store_name">
+          <input type="hidden" name="store_address" id="store_address">
+        </div>
+
+        <!-- 宅配地址表單 -->
+        <div id="info-home-address" class="info-box" style="display:none;">
+
+          {% if addresses %}
+          <!-- 顯示已儲存的地址 -->
+          <div class="address-selection">
+            <h4 class="address-title">請選擇收貨地址
+              <a href="#" class="add-address-link" onclick="event.preventDefault(); openAddressModal();">新增收貨地址</a>
+            </h4>
+
+            <div class="address-list" id="address-list">
+              {% for address in addresses %}
+              <label class="address-item" data-address-id="{{ address.id }}">
+                <input type="radio" name="address_id" value="{{ address.id }}" {% if address.is_default %}checked{% endif %}>
+                <div class="address-content">
+                  <div class="address-info">
+                    <strong>{{ address.receiver }}</strong>
+                    <span class="phone">{{ address.phone }}</span>
+                    {% if address.is_default %}
+                    <span class="default-badge">預設</span>
+                    {% endif %}
+                  </div>
+                  <div class="address-detail">
+                    {{ address.full_address }}
+                  </div>
+                </div>
+                <div class="address-actions">
+                  {% if not address.is_default %}
+                  <button type="button" class="btn-set-default" onclick="event.stopPropagation(); setDefaultAddress({{ address.id }})">設為預設</button>
+                  {% endif %}
+                  <button type="button" class="btn-edit" onclick="event.stopPropagation(); editAddress({{ address.id }})">編輯</button>
+                  <button type="button" class="btn-delete" onclick="event.stopPropagation(); deleteAddress({{ address.id }})">刪除</button>
+                </div>                
+              </label>
+              {% endfor %}
+            </div>
+
+            {% if addresses.count >= 2 %}
+            <div class="more-addresses">
+              <a href="#" class="more-address-link" onclick="event.preventDefault(); toggleMoreAddresses();">
+                <span id="toggle-text">更多地址</span>
+              </a>
+            </div>
+            {% endif %}
+          </div>
+
+          {% else %}
+          <!-- 沒有儲存的地址 -->
+          <div class="address-selection">
+            <h4 class="address-title">請選擇收貨地址
+              <a href="#" class="add-address-link" onclick="event.preventDefault(); openAddressModal();">新增收貨地址</a>
+            </h4>
+
+            <p class="address-notice">
+              <span class="notice-word">※ 請輸入收貨資訊</span>
+            </p>
+          </div>
+          {% endif %}
+
+        </div>
+      </div>
+
+      <!-- 信用卡資訊 -->
+      <div id="credit-card-section" class="checkout-section" style="display: none;">
+        <h3 class="section-title">信用卡資訊</h3>
+
+        <div class="form-group">
+          <label class="form-label">卡號 <span class="required">*</span></label>
+          <input type="text" name="card_number" class="form-control" placeholder="1234 5678 9012 3456" maxlength="19">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">有效期限 <span class="required">*</span></label>
+            <input type="text" name="card_expiry" class="form-control" placeholder="MM/YY" maxlength="5">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">安全碼 <span class="required">*</span></label>
+            <input type="text" name="card_cvv" class="form-control" placeholder="123" maxlength="3">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">持卡人姓名 <span class="required">*</span></label>
+          <input type="text" name="card_holder" class="form-control" placeholder="請輸入持卡人姓名">
+        </div>
+      </div>
+
+      <!-- 購物車商品明細 -->
+      <div class="row">
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+          <div class="cart-product-details-wrap cart-product-details-wrap-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart_items %}
+                <tr>
+                  <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Product</th>
+                  <td>
+                    <div class="cart-product-img-wrap">
+                      <div class="single-cart-product-box">
+                        <div class="single-cart-img">
+                          <img src="{{ item.product.image.url }}" alt="">
+                          <p>{{ item.product.name }}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Price</th>
+                  <td>${{ item.product.price_int|intcomma }}</td>
+                  <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Quantity</th>
+                  <td>
+                    <div class="quantity cart-quantity buttons_added">
+                      <span>{{ item.quantity }}</span>
+                    </div>
+                  </td>
+                  <th class="d-lg-none d-md-none d-block d-sm-block" scope="row">Subtotal</th>
+                  <td class="subtotal">${{ item.subtotal|intcomma }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </form>{# ← 修正：主表單在這裡正確關閉，Modal 的 form 才不會被視為巢狀表單 #}
+
+  </div>{# container #}
+
+  <!-- 訂單總計 -->
   <div class="checkout-summary">
     <div class="container">
       <div class="row mt-50 justify-content-between">
         <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-            <div class="cart-total-title">
-              <h4>Discount</h4>
-            </div>
-            <div class="cart-total-body">
-              <ul>
-                <li>Coupon</li>
-                <li>discount</li>
-              </ul>
-        </div>
-        
-  
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 both-small-50">
           <div class="cart-total-wrap">
             <div class="cart-total-title">
               <h4>Cart Total</h4>
@@ -116,24 +270,20 @@
             <div class="cart-total-body">
               <ul>
                 <li>Subtotal<span id="cart-total">${{ total|intcomma }}</span></li>
-                  <li>
-                    <div class="cart-total-body-title">Shipping:</div>
-                  </li>
-                  <li>Flat rate:<span>$50.00</span></li>
-                  <li>Shipping to MA.</li>
-                  <li class="click-address">
-                    <div class="cart-address-change-wrap">
-                      <p>{{ address }}</p>
-                    </div>
-                  </li>
-                  <li>Total<span id="cart-total">${{ total|intcomma }}</span></li>
-                  {% comment %} <li>
-                    <div class="update-cart-content-wrap">
-                      <form method="get" action="{% url 'orders:checkout' %}">
-                      <button type="submit" class="common-btn shop-details-review-btn update-cart-content-btn">order</button>
-                      </form>
-                    </div>
-                  </li> {% endcomment %}
+                <li>Shipping Fee<span>${{ shipping_fee|intcomma }}</span></li>
+                <li class="cart-product-detail-total-price">
+                  Total<span>${{ total_with_shipping|intcomma }}</span>
+                </li>
+                <li>
+                  <div class="update-cart-content-wrap">
+                    <form method="POST" action="{% url 'orders:checkout' %}">
+                      {% csrf_token %}
+                      <button type="submit" class="common-btn shop-details-review-btn update-cart-content-btn">
+                        order
+                      </button>
+                    </form>
+                  </div>
+                </li>
               </ul>
             </div>  
           </div>
@@ -141,11 +291,88 @@
       </div> 
     </div>
   </div>
+
+</div>{# cart-product-area #}
+
+<!-- 新增地址 Modal（在主表單外面，避免巢狀 form 問題） -->
+<div id="address-modal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>新增收貨地址</h3>
+      <button class="modal-close" onclick="closeAddressModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="address-form">
+        <div class="form-group">
+          <label class="form-label">收件人 <span class="required">*</span></label>
+          <input type="text" id="receiver" class="form-control" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">縣市 <span class="required">*</span></label>
+            <select id="modal-city" class="form-control" onchange="updateModalDistricts()" required>
+              <option value="">請選擇</option>
+              <option value="基隆市">基隆市</option>
+              <option value="臺北市">臺北市</option>
+              <option value="新北市">新北市</option>
+              <option value="宜蘭縣">宜蘭縣</option>
+              <option value="新竹市">新竹市</option>
+              <option value="新竹縣">新竹縣</option>
+              <option value="桃園市">桃園市</option>
+              <option value="苗栗縣">苗栗縣</option>
+              <option value="臺中市">臺中市</option>
+              <option value="彰化縣">彰化縣</option>
+              <option value="南投縣">南投縣</option>
+              <option value="嘉義市">嘉義市</option>
+              <option value="嘉義縣">嘉義縣</option>
+              <option value="雲林縣">雲林縣</option>
+              <option value="臺南市">臺南市</option>
+              <option value="高雄市">高雄市</option>
+              <option value="屏東縣">屏東縣</option>
+              <option value="臺東縣">臺東縣</option>
+              <option value="花蓮縣">花蓮縣</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">鄉鎮市區 <span class="required">*</span></label>
+            <select id="modal-district" class="form-control" required>
+              <option value="">請選擇</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">詳細地址 <span class="required">*</span></label>
+          <input type="text" id="street_address" class="form-control" placeholder="請輸入街道地址" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">手機號碼 <span class="required">*</span></label>
+            <input type="tel" id="phone" class="form-control" placeholder="09xxxxxxxx" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">郵遞區號</label>
+            <input type="text" id="postal_code" class="form-control" placeholder="選填">
+          </div>
+        </div>
+        <button type="button" class="btn-save-address" onclick="saveAddress()">
+          儲存收貨地址
+        </button>
+      </form>
+    </div>
+  </div>
 </div>
 
-{% comment %} <form method="post" action="{% url 'order_success' order.id %}">
-  {% csrf_token %}
-  <button type="submit">確認下單</button>
-</form> {% endcomment %}
+
+<script>
+  window.CHECKOUT_URLS = {
+    addressCreate: "{% url 'orders:address_create' %}"
+  };
+</script>
+
+<script src="{% static 'js/taiwan_postal.js' %}"></script>
+<script src="{% static 'js/checkout.js' %}"></script>
 
 {% endblock content %}

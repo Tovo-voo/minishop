@@ -12,9 +12,44 @@ class Address(models.Model):
     receiver = models.CharField(max_length=50, verbose_name="收件人")
     phone = models.CharField(max_length=20, verbose_name="聯絡電話")
     address = models.CharField(max_length=255, verbose_name="收件地址")
+
+    city = models.CharField(max_length=10, blank=True, null=True, verbose_name="縣市")
+    district = models.CharField(max_length=20, blank=True, null=True, verbose_name="鄉鎮市區")
+    street_address = models.CharField(max_length=100, blank=True, null=True, verbose_name="街道地址")
+
+    postal_code = models.CharField(
+        max_length=6,
+        blank=True,
+        null=True,
+        verbose_name="郵遞區號"
+    )
+
         
     is_default = models.BooleanField(default=False, verbose_name="預設地址")
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="建立時間")
+    update_at = models.DateTimeField(auto_now=True,verbose_name="更新時間")
+
+    class Meta:
+        verbose_name = '收件地址'
+        verbose_name_plural = '收件地址'
+        ordering = ['-is_default', '-created_at']
 
     def __str__(self):
-        return f"{self.receiver} - {self.address}"
+        return f"{self.receiver}  {self.city}{self.district}"
+    
+
+    @property
+    def full_address(self):
+        """完整地址"""
+        return f"{self.city}{self.district}{self.street_address}"
+    
+    def save(self, *args, **kwargs):
+        """如果設為預設地址，取消其他地址的預設狀態"""
+        if self.is_default:
+            Address.objects.filter(
+                user=self.user,
+                is_default=True
+            ).update(is_default=False)
+        super().save(*args, **kwargs)
+
+

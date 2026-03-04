@@ -67,8 +67,13 @@ class Product(models.Model):
     """商品模型"""
     name = models.CharField(max_length=100, verbose_name="商品名稱")
     slug = models.SlugField(max_length=20, unique=True, verbose_name="網址代稱")
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="售價")
-    price_int = models.PositiveIntegerField(null=True, blank=True, verbose_name="售價")
+    price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name="售價")
+    
+
+    @property
+    def price_int(self):    # 把格式從decimal轉成int
+        return int(self.price)
+
     category = models.ForeignKey(
         Category,
         related_name='products',

@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Address
+from django.http import JsonResponse
 
 # authenticate:是Django內建方法，用來「驗證帳號密碼是否正確」
 # 第一次開登入頁是 GET請求 ，顯示頁面。按下登入是 POST請求，檢查帳號密碼
@@ -77,11 +78,24 @@ def register_view(request):
 # 新增地址
 def add_address_view(request):
     if request.method == 'POST':
-        Address.objects.create(
+        address = Address.objects.create(
             user=request.user,
             receiver=request.POST['receiver'],
             phone=request.POST['phone'],
             address=request.POST['address'],
         )
-        return redirect('orders:checkout')
-    return render(request, 'accounts/partials/add_address.html')
+    #     return redirect('orders:checkout')
+    # return render(request, 'accounts/partials/add_address.html')
+
+    # AJAX版 把新地址 id 存進 session > 自動選擇
+        request.session['shipping_address_id'] = address.id
+
+        return JsonResponse({
+            'success' : True,
+            'address_id' : address.id,
+            'receiver' : address.receiver,
+            'phone' : address.phone,
+            'address' : address.address,
+        })
+
+    return JsonResponse({'success':False}, status=400)

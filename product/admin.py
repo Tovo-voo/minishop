@@ -47,7 +47,6 @@ class ProductAdmin(admin.ModelAdmin):
         'name',
         'category',
         'price',
-        'price_int',
         'discount',
         'stock',
         'is_new',
@@ -57,7 +56,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ['category', 'is_new', 'is_available']
     search_fields = ['name']        # 上方的搜尋框，可以搜名稱
     prepopulated_filters = {'slug':('name',)}
-    list_editable = ['price', 'price_int', 'discount', 'stock', 'is_new', 'is_available']
+    list_editable = ['price', 'discount', 'stock', 'is_new', 'is_available']
     inlines = [ProductImageInline]      # 內嵌圖片管理
 
     # 分類階層過濾器

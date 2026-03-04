@@ -1,5 +1,4 @@
-
-<div id="addAddressModal" class="modal">
+<div id="addAddressModal" class="modal" style="display:none;">
   <div class="modal-content">
 
     <div class="modal-header">
@@ -7,7 +6,10 @@
       <button type="button" class="close-btn" onclick="closeAddAddress()">×</button>
     </div>
 
-    <form method="post" action="{% url 'add_address' %}">
+    <!-- ✅ 小提示/錯誤訊息區 -->
+    <div id="addAddressMsg" style="margin: 8px 0; font-size: 14px;"></div>
+
+    <form id="addAddressForm" novalidate>
       {% csrf_token %}
 
       <div class="form-group">
@@ -19,14 +21,15 @@
         <label>手機</label>
         <input type="text" name="phone" required>
       </div>
-      
+
       <div class="form-group">
         <label>地址</label>
         <input type="text" name="address" required>
       </div>
 
-
-      <button type="submit" class="btn-primary">儲存收貨地址</button>
+      <button id="addAddressSubmitBtn" type="submit" class="btn-primary">
+        儲存收貨地址
+      </button>
     </form>
 
   </div>
