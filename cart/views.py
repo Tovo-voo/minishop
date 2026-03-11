@@ -31,6 +31,7 @@ def cart_view(request):
 
 
     return render(request, 'cart/cart.html', {
+        'current_step': 1,
         'cart_items':cart_items,
         'total':total,
     })
@@ -74,71 +75,6 @@ def remove_cartproduct_view(request, product_id):
 
 
 
-
-
-# def plus(request, product_id):
-#     """
-#     增加商品數量(+號) ajax版
-#     """
-
-#     cart = request.session.get('cart', {})
-#     pid = str(product_id)
-
-#     if pid in cart:
-#         if cart[pid]['quantity'] < 50:
-#             cart[pid]['quantity'] += 1
-    
-#     request.session['cart'] = cart
-
-#     # 查商品價格，算小計，更新價格
-#     product = Product.objects.get(id=product_id)
-#     quantity = cart[pid]['quantity']
-#     subtotal = quantity * product.price
-#     total = calculate_cart_total(cart)
-
-#     # return redirect('cart') 舊的(非ajax版)
-
-
-#     # 將商品價格、數量、商品總價傳給前端更新，不刷新頁面
-#     return JsonResponse({
-#         'product_id' : product_id,
-#         'quantity' : quantity,
-#         'subtotal' : subtotal,
-#         'total' : total,
-#         'cart_count' : sum(item['quantity'] for item in cart.values())
-#     })
-
-
-
-# def minus(request, product_id):
-#     """
-#     減少商品數量(-號) ajax版
-#     """
-
-#     cart = request.session.get('cart', {})
-#     pid = str(product_id)
-    
-#     if pid in cart:
-#         if cart[pid]['quantity'] > 1:
-#             cart[pid]['quantity'] -= 1
-    
-#     request.session['cart'] = cart
-
-#     product = Product.objects.get(id=product_id)
-#     quantity = cart[pid]['quantity']
-#     subtotal = product.price * quantity
-#     total = calculate_cart_total(cart)
-
-#     # return redirect('cart')  舊的(非ajax版)
-
-
-#     return JsonResponse({
-#         'product_id' : product_id,
-#         'quantity' : quantity,
-#         'subtotal' : subtotal,
-#         'total' : total,
-#         'cart_count' : sum(item['quantity'] for item in cart.values())
-#     })
 
 
 

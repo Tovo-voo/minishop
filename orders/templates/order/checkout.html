@@ -16,8 +16,8 @@
 {% endblock category_nav %}
 
 {% block content %}
-
-<!-- Checkout Steps -->
+{% include "components/checkout_step.html" %}
+{% comment %} <!-- Checkout Steps -->
 <div class="checkout-steps">
   <div class="step">
     <span class="step-number">1</span>
@@ -33,7 +33,7 @@
     <span class="step-number">3</span>
     <span class="step-text">Order Completed</span>
   </div>
-</div>
+</div> {% endcomment %}
 
 
 <div class="cart-product-area mt-100">
@@ -146,6 +146,8 @@
                     {{ address.full_address }}
                   </div>
                 </div>
+
+                <!-- 操作按鈕(滑鼠移入顯示) -->
                 <div class="address-actions">
                   {% if not address.is_default %}
                   <button type="button" class="btn-set-default" onclick="event.stopPropagation(); setDefaultAddress({{ address.id }})">設為預設</button>
@@ -161,6 +163,7 @@
             <div class="more-addresses">
               <a href="#" class="more-address-link" onclick="event.preventDefault(); toggleMoreAddresses();">
                 <span id="toggle-text">更多地址</span>
+                <span id="toggle-arrow" class="toggle-arrow">∨</span>
               </a>
             </div>
             {% endif %}

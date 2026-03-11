@@ -51,6 +51,7 @@ def checkout_view(request):
         default_address = addresses.filter(is_default=True).first()     # 查詢使用者的所有地址之後篩選第一個設為預設的地址
 
         context = {
+            'current_step': 2,
             'cart_items' : cart_items,
             'total' : total,
             'shipping_fee' : shipping_fee,
@@ -122,71 +123,71 @@ def checkout_view(request):
 
 
 
-    # 處理付款方式資訊
-    payment_info = {'method': payment_method}
+        # 處理付款方式資訊
+        payment_info = {'method': payment_method}
 
-    if payment_method == 'credit_card':
-        # 收信用卡資訊
-        card_number = request.POST.get('card_number', '')
-        card_holder = request.POST.get('card_holder', '')
+        if payment_method == 'credit_card':
+            # 收信用卡資訊
+            card_number = request.POST.get('card_number', '')
+            card_holder = request.POST.get('card_holder', '')
 
-        # 簡單驗證
-        if not card_number or not card_holder:
-            messages.error(request, '請填寫完整的信用卡資訊')
-            return redirect('checkout')
+            # 簡單驗證
+            if not card_number or not card_holder:
+                messages.error(request, '請填寫完整的信用卡資訊')
+                return redirect('checkout')
 
-        # 只儲存後四碼(安全考量)
-        payment_info['last_4_digits'] = card_number[-4:] if len(card_number) >= 4 else ''
-        payment_info['card_holder'] = card_holder
+            # 只儲存後四碼(安全考量)
+            payment_info['last_4_digits'] = card_number[-4:] if len(card_number) >= 4 else ''
+            payment_info['card_holder'] = card_holder
 
-    # 算訂單金額
-    product_ids = cart.keys()
-    products = Product.objects.filter(id__in=product_ids)
+        # 後端重新計算金額
+        product_ids = cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
 
-    total = 0
-    for product in products:
-        quantity = cart[str(product.id)]['quantity']
-        total += quantity * product.price_int
-    shipping_fee = 60
-    total_with_shipping = total + shipping_fee
-
-
-    # 建立訂單
-    order = Order.objects.create(
-        user=request.user,
-        order_number=generate_order_number(),
-        delivery_method=delivery_method,
-        payment_method=payment_method,
-        shipping_address=selected_address,
-        shipping_info=shipping_info,
-        payment_info=payment_info,
-        subtotal=Decimal(total),
-        shipping_fee=Decimal(shipping_fee),
-        total_amount=Decimal(total_with_shipping),
-        status='pending',
-    )
+        total = 0
+        for product in products:
+            quantity = cart[str(product.id)]['quantity']
+            total += quantity * product.price_int
+        shipping_fee = 60
+        total_with_shipping = total + shipping_fee
 
 
-    # 建立訂單項目(記錄當時價格)
-    for product in products:
-        quantity = cart[str(product.id)]['quantity']
-        price = product.price_int
-        subtotal = price * quantity
-
-        OrderItem.objects.create(
-            order=order,
-            product=product,
-            quantity=quantity,
-            price=price,    # 紀錄下單時的價格
-            subtotal=Decimal(subtotal)   # 紀錄下單時的小計
+        # 建立訂單
+        order = Order.objects.create(
+            user=request.user,
+            order_number=generate_order_number(),
+            delivery_method=delivery_method,
+            payment_method=payment_method,
+            shipping_address=selected_address,
+            shipping_info=shipping_info,
+            payment_info=payment_info,
+            subtotal=Decimal(total),
+            shipping_fee=Decimal(shipping_fee),
+            total_amount=Decimal(total_with_shipping),
+            status='pending',
         )
 
-    # 清空購物車
-    request.session['cart'] = {}
-    request.session.modified = True
 
-    messages.success(request, f"訂單建立成功！訂單編號:{order.order_number}")
-    return redirect('orders:order_success', order_id=order.id)
+        # 建立訂單項目(記錄當時價格)
+        for product in products:
+            quantity = cart[str(product.id)]['quantity']
+            price = product.price_int
+            subtotal = price * quantity
+
+            OrderItem.objects.create(
+                order=order,
+                product=product,
+                quantity=quantity,
+                price=price,    # 紀錄下單時的價格
+                subtotal=Decimal(subtotal)   # 紀錄下單時的小計
+            )
+
+        # 清空購物車
+        request.session['cart'] = {}
+        request.session.modified = True
+
+        messages.success(request, f"訂單建立成功！訂單編號:{order.order_number}")
+        return redirect('orders:order_success', order_id=order.id)
 
 
 def generate_order_number():
@@ -209,72 +210,160 @@ def order_success_view(request, order_id):
         'order' : order,
         'order_items' : order_items,
     }
-    return render(request, 'order/order_success.html', context)
+    return JsonResponse({'context': context})
 
 
 # 地址管理API
 @login_required
 def address_create_view(request):
     """建立新地址(AJAX)"""
-    if request.method == 'POST':
-        receiver = request.POST.get('receiver')
-        phone = request.POST.get('phone')
-        city = request.POST.get('city')
-        district = request.POST.get('district')
-        street_address = request.POST.get('street_address')
-        postal_code = request.POST.get('postal_code', '')
+    if request.method != 'POST':
+        return JsonResponse({'success' : False, 'error' : '無效的請求方法'}, status=405)
+    
 
-        # 驗證
-        if not all([receiver, phone, city, district, street_address]):
-            return JsonResponse({
-                'success' : False,
-                'error' : '請填寫完整資訊'
-            })
-        
-        # 建立地址
-        address = Address.objects.create(
-            user=request.user,
-            receiver=receiver,
-            phone=phone,
-            city=city,
-            district=district,
-            street_address=street_address,
-            postal_code=postal_code,
-            is_default=Address.objects.filter(user=request.user).count() == 0   # 第一筆為預設
+    receiver = request.POST.get('receiver')
+    phone = request.POST.get('phone')
+    city = request.POST.get('city')
+    district = request.POST.get('district')
+    street_address = request.POST.get('street_address')
+    postal_code = request.POST.get('postal_code', '')
+
+    # 驗證
+    if not all([receiver, phone, city, district, street_address]):
+        return JsonResponse({'success' : False, 'error' : '請填寫完整資訊'}, status=400)
+    
+    # 建立地址(成功就建立地址)
+    address = Address.objects.create(
+        user=request.user,
+        receiver=receiver,
+        phone=phone,
+        city=city,
+        district=district,
+        street_address=street_address,
+        postal_code=postal_code,
+        is_default=Address.objects.filter(user=request.user).count() == 0   # 第一筆為預設
         )
 
         
-        return JsonResponse({
-            'success' : True,
-            'message' : '地址新增成功',
-            'address' : {
-                'id' : address.id,
-                'receiver' : address.receiver,
-                'phone' : address.phone,
-                'full_address' : address.full_address,
-                'is_default' : address.is_default,
-            }
-        })
+    return JsonResponse({
+        'success' : True,
+        'message' : '地址新增成功',
+        'address' : {
+            'id' : address.id,
+            'receiver' : address.receiver,
+            'phone' : address.phone,
+            'full_address' : address.full_address,
+            'is_default' : address.is_default,
+        }
+    }, status=201)
 
+
+
+
+
+@login_required
+def address_set_default_view(request):
+    """設為預設地址"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': '無效的請求'}, status=405)
+
+    address_id = request.POST.get('address_id')
+    try:
+        # 取消其他預設地址
+        Address.objects.filter(user=request.user, is_default=True).update(is_default=False)
+
+        # 設定新的預設地址
+        address = Address.objects.get(id=address_id, user=request.user)
+        address.is_default = True
+        address.save()
+
+        return JsonResponse({'success': True}, status=200)
+    except Address.DoesNotExist:
+        return JsonResponse({'success': False, 'error': '地址不存在'}, status=404)
+    
+    
+
+
+
+@login_required
+def address_detail_view(request, address_id):
+    """取得地址詳細資料(AJAX)"""
+    try:
+        address = Address.objects.get(id=address_id, user=request.user)
+    except Address.DoesNotExist:
+        return JsonResponse({'success': False, 'error': '地址不存在'}, status=404)
+    
+    return JsonResponse({
+    'success': True,
+    'address': {
+        'id': address_id,
+        'receiver': address.receiver,
+        'phone': address.phone,
+        'city': address.city,
+        'district': address.district,
+        'street_address': address.street_address,
+        'postal_code': address.postal_code
+    }
+}, status=200)
+
+
+@login_required
+def address_update_view(request, address_id):
+    """編輯地址(AJAX)"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': '無效的請求'}, status=405)
+    try:
+        address = Address.objects.get(id=address_id, user=request.user)
+    except Address.DoesNotExist:
+        return JsonResponse({'success': False, 'error': '地址不存在'}, status=404)
+    
+    receiver = request.POST.get('receiver')
+    phone = request.POST.get('phone')
+    city = request.POST.get('city')
+    district = request.POST.get('district')
+    street_address = request.POST.get('street_address')
+    postal_code = request.POST.get('postal_code')
+
+    if not all([receiver, phone, city, district, street_address, postal_code]):
+        return JsonResponse({'success': False, 'error': '請填寫完整資訊'}, status=400)
+    
+    address.receiver = receiver
+    address.phone = phone
+    address.city = city
+    address.district = district
+    address.street_address = street_address
+    address.postal_code = postal_code
+    address.save()
 
     return JsonResponse({
-        'success' : False,
-        'error' : '無效的請求方法'
-    })
+        'success': True,
+        'address':{
+            'id': address.id,
+            'receiver': address.receiver,
+            'phone': address.phone,
+            'full_address':address.full_address,
+            'is_default': address.is_default,
+        }
+    }, status=200)
 
-# @login_required
-# def order_detail_view(request, order_id):
-#     """
-#     訂單詳情頁面
-#     """
-#     order = get_object_or_404(Order, id=order_id, user=request.user)
-#     order_items = order.items.all()
+@login_required
+def address_delete_view(request, address_id):
+    """刪除地址"""
+    if request.method != 'POST':
+        return JsonResponse({'success': False, 'error': '無效的請求'}, status=405)
+    try:
+        address = Address.objects.get(id=address_id, user=request.user)
+    except Address.DoesNotExist:
+        return JsonResponse({'success': False, 'error': '地址不存在'}, status=404)
+    
+    address.delete()
+    return JsonResponse({'success': True}, status=200)
 
-#     context = {
-#         'order' : order,
-#         'order_items' : order_items,
-#     }
-#     return render(request, 'order/order_detail.html', context)
+
+
+
+
+
 
 
 # @login_required

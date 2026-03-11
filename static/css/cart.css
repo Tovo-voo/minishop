@@ -39,8 +39,7 @@ body.checkout-page .topbar .logo-dark {
 
 body.checkout-page .checkout-summary {
   margin-top: 64px;
-  padding-top: 40px;
-  border-top: 1px solid #eee;
+  padding-top: 30px;
 }
 
 
@@ -441,6 +440,11 @@ body.checkout-page .checkout-summary {
     padding: 5px 20px
 }
 
+.cart-total-body ul {
+  list-style: none;
+  padding: 0;
+}
+
 .cart-total-body li {
     font-size: 14px;
     color: #303030;
@@ -449,23 +453,16 @@ body.checkout-page .checkout-summary {
 }
 
 .cart-total-body li:last-child {
-    border-bottom: none
+    padding-top: 0;
+    margin-top: 20px;
 }
 
 .cart-total-body li:nth-child(2) {
-    border-bottom: none;
-    padding: 0;
-    margin-top: 19px;
-    margin-bottom: -7px
+    margin-bottom: 0;
 }
 
-.cart-total-body li:nth-child(4) {
-    margin-top: -37px
-}
 
-.cart-total-body li:nth-child(3) {
-    border-bottom: none
-}
+
 
 .cart-total-body li span {
     float: right
@@ -495,7 +492,8 @@ body.checkout-page .checkout-summary {
     justify-content: end;
     -webkit-box-align: center;
     -ms-flex-align: center;
-    align-items: center
+    align-items: center;
+    margin-top: 40px;
 }
 
 .update-cart-content-wrap p {
@@ -903,11 +901,12 @@ textarea.form-control {
   display: flex;
   align-items: flex-start;
   padding: 20px 0;
-  background: transparent;
+  background: #fff;
   border-bottom: 1px solid #f0f0f0;
   cursor: pointer;
   transition: all 0.3s;
   margin: 0;
+  position: relative;
 }
 
 .address-item:last-child {
@@ -915,8 +914,78 @@ textarea.form-control {
 }
 
 .address-item:hover {
-  background: #f9f9f9;
+  background: #f9f9f9;  /* ⭐ 滑鼠移入反灰 */
 }
+
+/* 預設地址徽章 */
+.default-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #e74c3c;
+  color: white;
+  font-size: 12px;
+  border-radius: 3px;
+  margin-left: 10px;
+}
+
+/* ⭐ 操作按鈕容器（預設隱藏）*/
+.address-actions {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: none;  /* 預設隱藏 */
+  gap: 10px;
+  align-items: center;
+}
+
+/* ⭐ 滑鼠移入時顯示按鈕 */
+.address-item:hover .address-actions {
+  display: flex;
+}
+
+/* 按鈕基本樣式 */
+.address-actions button {
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s;
+  border: 1px solid #ddd;
+  background: white;
+}
+
+/* 設為預設按鈕 */
+.btn-set-default {
+  color: #0066cc;
+  border-color: #0066cc;
+}
+
+.btn-set-default:hover {
+  background: #0066cc;
+  color: white;
+}
+
+/* 編輯按鈕 */
+.btn-edit {
+  color: #666;
+}
+
+.btn-edit:hover {
+  background: #f0f0f0;
+}
+
+/* 刪除按鈕 */
+.btn-delete {
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.btn-delete:hover {
+  background: #e74c3c;
+  color: white;
+}
+
 
 /* Radio 按鈕 */
 .address-item input[type="radio"] {
@@ -956,35 +1025,26 @@ textarea.form-control {
   line-height: 1.5;
 }
 
-/* ⭐ 更多地址（藍色文字連結）*/
+/* ⭐ 更多地址  */
 .more-addresses {
-  text-align: center;
+  text-align: left;
   padding: 15px 0;
-  border-bottom: 1px solid #e0e0e0;
 }
 
-.more-addresses-link {
-  color: #0066cc;
+.more-address-link {
+  color: #333;
   text-decoration: none;
   font-size: 13px;
   font-weight: 400;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  transition: all 0.3s;
+  gap: 6px;
 }
 
 .more-addresses-link:hover {
   text-decoration: underline;
 }
 
-#toggle-text::after {
-  content: ' ▼';
-}
-
-.address-list.show-all ~ .more-addresses .more-addresses-link #toggle-text::after {
-  content: ' ▲';
-}
 
 /* ========== 沒有地址時（完全無邊框）========== */
 .no-address-prompt {

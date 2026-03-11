@@ -16,7 +16,8 @@
 {% endblock category_nav %}
 
 {% block content %}
-<div class="checkout-steps">
+{% include "components/checkout_step.html" %}
+{% comment %} <div class="checkout-steps">
   <div class="step active">
     <span class="step-number">1</span>
     <span class="step-text">Shopping Cart</span>
@@ -31,7 +32,7 @@
     <span class="step-number">3</span>
     <span class="step-text">Order Completed</span>
   </div>
-</div>
+</div> {% endcomment %}
 
 <div class="cart-product-area mt-100">
   <div class="container">
