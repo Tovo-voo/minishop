@@ -1,0 +1,109 @@
+<!-- 訂單完成 -->
+
+{% extends "core/base.html" %}
+{% load static %}
+{% load humanize %}
+
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}">
+<link rel="stylesheet" href="{% static 'css/order.css' %}">
+{% endblock extra_head %}
+
+
+{% block body_class %}checkout-page{% endblock %}
+
+{% block category_nav %}
+<ul class="navbar-nav ms-auto primary-menu"></ul>
+{% endblock category_nav %}
+
+{% block content %}
+{% if is_success %}
+  {% include "components/checkout_step.html" %}
+{% endif %}
+
+<div class="order-success-page">
+  <div class="order-hero">
+    <div class="container order-hero-shell">
+      <div class="order-hero-copy">
+        <p class="hero-tag">ORDER CONFIRMED</p>
+        {% if is_success %}
+          <h1>訂單成立成功!</h1>
+          <p>感謝您的訂購，我們將會為您盡快處理訂單。</p>
+        {% else %}
+          <h1>訂單詳情</h1>
+          <p>感謝您的訂購，我們將會為您盡快處理訂單。</p>
+        {% endif %}      
+      </div>
+      <div class="order-hero-panel">
+        <p class="order-panel-label">配送狀態</p>
+        <h2>備貨中</h2>
+        <p>預計 2-4 個工作天送達</p>
+        <div class="order-progress">
+          <span class="active"></span>
+          <span class="active"></span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container order-success-layout" id="order-root">
+    <div class="order-card order-summary-card">
+      <div class="order-card-head">
+        <div>
+          <p class="order-kicker">訂單編號</p>
+          <h2>{{ order.order_number }}</h2>
+        </div>
+        <p class="order-date">成立時間:{{ order.created_at }}</p>        
+      </div>
+      <div class="order-benefits">
+        <article>
+          <h3>配送資訊</h3>
+          <p>黑貓宅配標準配送，出貨僅提供追蹤編號。</p>
+        </article>
+      </div>
+
+      <!-- 每筆商品 -->
+      <div class="order-item">
+      {% for item in order_items %}
+        <div class="order-item-row">
+          <div class="order-item-main">
+            <div class="single-cart-img">
+              <img src="{{ item.product.image.url }}" alt="">
+            </div>
+            <div>
+              <p class="product-name">{{ item.product.name }}</p>
+              <p class="order-item-meta">{{ item.quantity }} × {{ item.price|floatformat:0|intcomma }}</p>
+            </div>
+          </div>
+          <strong>${{ item.subtotal|floatformat:0|intcomma }}</strong>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+
+    <!-- 付款金額訊快照 -->
+    <div class="order-card order-side-card">
+      <h3>付款摘要</h3>
+      <div class="order-total-row">
+        <span>商品小計</span>
+        <strong>${{ order.subtotal|floatformat:0|intcomma }}</strong>   <!-- 這邊是全部產品總金額 -->
+      </div>
+      <div class="order-total-row">
+        <span>運費</span>
+        <strong>${{ order.shipping_fee|floatformat:0|intcomma }}</strong>
+      </div>
+      <div class="order-total-row total">
+        <span>訂單總額</span>
+        <strong>${{ order.total_amount|floatformat:0|intcomma }}</strong>
+      </div>
+      <a href="{% url 'Home' %}" class="outline-btn">返回首頁</a>
+    </div>
+  </div>
+</div>
+
+{% include "components/footer.html" %}
+
+<script src="{% static 'js/checkout.js' %}"></script>
+{% endblock content %}

@@ -1,0 +1,44 @@
+{% extends "core/base.html" %}
+{% load static %}
+ 
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/cart.css' %}"> <!-- 有導覽列的css -->
+<link rel="stylesheet" href="{% static 'css/order.css' %}">
+{% endblock extra_head %}
+ 
+{% block body_class %}checkout-page{% endblock %}
+ 
+{% block category_nav %}
+<ul class="navbar-nav ms-auto primary-menu"></ul>
+{% endblock category_nav %}
+ 
+{% block content %}
+ 
+<div class="list-account-page">
+  <div class="list-account-shell">
+ 
+    <!-- 左側導覽列 -->
+    <aside class="list-sidebar">
+      <div class="list-sidebar-head">
+        <p>我的帳戶</p>
+      </div>
+      <ul class="list-nav">
+        <li><a href="#">個人資料</a></li>
+        <li><a href="#">收件地址一覽</a></li>
+        <li><a href="{% url 'orders:order_list' %}" {% if active_nav == 'orders' %}class="active"{% endif %}>訂單紀錄</a></li>
+        <li><a href="#">退貨退款紀錄</a></li>
+        <li><a href="#">優惠券</a></li>
+      </ul>
+    </aside>
+ 
+    <!-- 帳戶其他內容自行填空 -->
+    <main class="list-main">
+      {% block order_content %}{% endblock order_content %}
+    </main>
+ 
+  </div>
+</div>
+
+{% include "components/footer.html" %}
+ 
+{% endblock content %}

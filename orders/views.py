@@ -75,7 +75,7 @@ def checkout_view(request):
 
         if not delivery_method or not payment_method:
             messages.error(request, '請選擇配送方式和付款方式')
-            return redirect('checkout')
+            return redirect('orders:checkout')
         
         shipping_info = {}
         selected_address = None
@@ -87,7 +87,7 @@ def checkout_view(request):
             # 驗證門市資訊
             if not store_id or not store_name:
                 messages.error(request, '請選擇7-11取貨門市')
-                return redirect('checkout')
+                return redirect('orders:checkout')
             
             shipping_info = {
                 'type' : '7-11',
@@ -119,7 +119,7 @@ def checkout_view(request):
 
             else:
                 messages.error(request, '請選擇配送地址')
-                return redirect('checkout')
+                return redirect('orders:checkout')
 
 
 
@@ -134,7 +134,7 @@ def checkout_view(request):
             # 簡單驗證
             if not card_number or not card_holder:
                 messages.error(request, '請填寫完整的信用卡資訊')
-                return redirect('checkout')
+                return redirect('orders:checkout')
 
             # 只儲存後四碼(安全考量)
             payment_info['last_4_digits'] = card_number[-4:] if len(card_number) >= 4 else ''
@@ -207,10 +207,12 @@ def order_success_view(request, order_id):
     order_items = order.items.all()
 
     context = {
+        'current_step': 3,
         'order' : order,
         'order_items' : order_items,
+        'is_success': True,
     }
-    return JsonResponse({'context': context})
+    return render(request, 'order/order_success.html', context)
 
 
 # 地址管理API
@@ -361,19 +363,34 @@ def address_delete_view(request, address_id):
 
 
 
+@login_required
+def order_list_view(request):
+    """
+    訂單列表頁面(使用者的所有訂單)
+    """
+    orders = Order.objects.filter(user=request.user).order_by('-created_at')
+
+    context = {
+        'orders' : orders,
+    }
+    return render(request, 'order/order_list.html', context)
 
 
 
 
+@login_required
+def order_detail_view(request, order_id):
+    """
+    每筆訂單的詳情
+    """
 
-# @login_required
-# def order_list_view(request):
-#     """
-#     訂單列表頁面(使用者的所有訂單)
-#     """
-#     orders= Order.objects.filter(user=request.user).order_by('-created_at')
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    order_items = order.items.all()  # 從order反向查詢每筆商品細項
+    context = {
+        'is_success': False,
+        'order': order,
+        'order_items': order_items,
+    }
 
-#     context = {
-#         'orders' : orders,
-#     }
-#     return render(request, 'order/order_list.html', context)
+    return render(request, 'order/order_success.html', context)
+    

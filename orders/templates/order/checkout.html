@@ -16,29 +16,12 @@
 {% endblock category_nav %}
 
 {% block content %}
-{% include "components/checkout_step.html" %}
-{% comment %} <!-- Checkout Steps -->
-<div class="checkout-steps">
-  <div class="step">
-    <span class="step-number">1</span>
-    <span class="step-text">Shopping Cart</span>
-  </div>
-
-  <div class="step active">
-    <span class="step-number">2</span>
-    <span class="step-text">Confirm Order</span>
-  </div>
-
-  <div class="step">
-    <span class="step-number">3</span>
-    <span class="step-text">Order Completed</span>
-  </div>
-</div> {% endcomment %}
+{% include "components/checkout_step.html" %}   <!-- 上面的步驟階段 -->
 
 
 <div class="cart-product-area mt-100">
   <div class="container">
-    <form method="POST" action="{% url 'orders:checkout' %}">
+    <form method="POST" action="{% url 'orders:checkout' %}" id="checkout-form">
       {% csrf_token %}
 
       <!-- 配送方式 -->
@@ -279,12 +262,9 @@
                 </li>
                 <li>
                   <div class="update-cart-content-wrap">
-                    <form method="POST" action="{% url 'orders:checkout' %}">
-                      {% csrf_token %}
-                      <button type="submit" class="common-btn shop-details-review-btn update-cart-content-btn">
-                        order
-                      </button>
-                    </form>
+                    <button type="submit" class="common-btn shop-details-review-btn update-cart-content-btn" form="checkout-form">
+                      order
+                    </button>
                   </div>
                 </li>
               </ul>
@@ -297,7 +277,7 @@
 
 </div>{# cart-product-area #}
 
-<!-- 新增地址 Modal（在主表單外面，避免巢狀 form 問題） -->
+<!-- 新增地址 Modal（在主表單外面，避免巢狀 form 問題)，這是HTML的規範 -->
 <div id="address-modal" class="modal">
   <div class="modal-content">
     <div class="modal-header">

@@ -11,5 +11,6 @@ urlpatterns = [
     path('address/<int:address_id>/detail/', views.address_detail_view, name='address_detail'),
     path('address/<int:address_id>/update/', views.address_update_view, name='address_update'),
     path('address/<int:address_id>/delete/', views.address_delete_view, name='address_delete'),
-    path('success/<int:order_id>/', views.order_success_view, name='order_success'),
+    path('order_list/', views.order_list_view, name='order_list'),
+    path('order_deatil/<int:order_id>/', views.order_detail_view, name='order_detail'),
 ]

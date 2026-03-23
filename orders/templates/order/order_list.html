@@ -1,0 +1,80 @@
+{% extends "core/base_order_account.html" %}
+{% load static %}
+{% load humanize %}
+
+
+
+
+
+
+{% block order_content %}
+<main class="list-main">
+  <section class="list-page-head">
+    <h1>訂單中心</h1>
+    <p>可查看歷史訂單、訂單狀態與訂單明細</p>
+  </section>
+
+  <section class="list-filter-row">
+    <div class="list-field search-field">
+      <label for="order-search">搜尋訂單</label>
+      <input id="order-search" type="search" placeholder="輸入訂單編號或商品名稱">
+    </div>
+    <div class="list-field">
+      <label for="start-date">開始日期</label>
+      <input id="start-date" type="date">
+    </div>
+    <div class="list-field">
+      <label for="end-date">結束日期</label>
+      <input id="end-date" type="date">
+    </div>
+  </section>
+
+  <section class="order-list-page">
+    <div class="order-list-header">
+      <h2>訂單紀錄</h2>
+      <p>查看所有歷史訂單</p>
+    </div>
+    <div class="list-divider"></div>
+
+    {% if orders %}
+    <div class="order-list-table">
+      <div class="order-table-head">
+        <span>訂單編號</span>
+        <span>日期</span>
+        <span>金額</span>
+        <span>狀態</span>
+        <span></span>
+      </div>
+
+      {% for order in orders %}
+      <div class="order-list-item">
+        <span class="order-number">{{ order.order_number }}</span>
+        <span class="order-date">{{ order.created_at|date:"Y/m/d" }}</span>
+        <span class="order-amount">{{ order.total_amount|floatformat:0|intcomma }}</span>
+        <span>
+          <span class="order-status status-{{ order.status }}">
+            {% if order.status == 'pending' %}待付款
+            {% elif order.status == 'processing' %}處理中
+            {% elif order.status == 'shipped' %}已出貨
+            {% elif order.status == 'delivered' %}已送達
+            {% elif order.status == 'cancelled' %}已取消
+            {% else %}{{ order.status }}
+            {% endif %}
+          </span>
+        </span>
+        <a href="{% url 'orders:order_detail' order.id %}" class="order-detail-link">查看詳情</a>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="order-empty">
+      <p>目前沒有歷史訂單。</p>
+      <a href="{% url 'Home' %}">回首頁購物</a>
+    </div>
+    {% endif %}
+  </section>
+</main>
+
+
+
+{% endblock %}
