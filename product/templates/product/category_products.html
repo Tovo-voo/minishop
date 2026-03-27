@@ -10,14 +10,14 @@
 
 {% endblock extra_head %}
 
-<!-- ✅ 新增這個 block，給 body 加上 class -->
+<!--  新增這個 block，給 body 加上 class -->
 {% block body_class %}category-page{% endblock %}
 
 {% block content %}
 
 
 
-<!-- 🧭 細分類列（在導覽列下方、Hero 上方） -->
+<!--  細分類列（在導覽列下方、Hero 上方） -->
 <div id="subNav" class="sub-nav">
   <div class="container d-flex justify-content-center gap-4">
     <a href="#" class="active">所有T恤</a>
@@ -29,7 +29,7 @@
 </div>
 
 
-<!-- 🖼 Hero 大卡圖區（滿版） -->
+<!-- Hero 大卡圖區（滿版） -->
 <div class="hero-banner">
   <div class="hero-img-wrap">
     {% if category.banner %}
@@ -46,7 +46,7 @@
 
 
 
-<!-- 🛍 商品展示區 -->
+<!-- 商品展示區 -->
 <section class="home-one-best-product-area mt-5 mb-5">
   <div class="container">
     <div class="row g-4">
@@ -61,7 +61,7 @@
             {% endif %}
 
 
-            <!-- ✅ 標籤（先檢查欄位是否存在） -->
+            <!--  標籤（先檢查欄位是否存在） -->
             {% if product.is_new %}
               <div class="home-one-product-img-cta">
                 <span>New</span></div>
@@ -71,7 +71,7 @@
             {% endif %}
             
 
-            <!-- ✅ 按鈕 -->
+            <!-- 按鈕 -->
             <div class="home-one-product-option">
               <ul>
                 <li><a href="#"><i class='bx bx-refresh'></i></a></li>

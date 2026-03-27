@@ -23,11 +23,25 @@
         <p>我的帳戶</p>
       </div>
       <ul class="list-nav">
-        <li><a href="#">個人資料</a></li>
-        <li><a href="#">收件地址一覽</a></li>
-        <li><a href="{% url 'orders:order_list' %}" {% if active_nav == 'orders' %}class="active"{% endif %}>訂單紀錄</a></li>
-        <li><a href="#">退貨退款紀錄</a></li>
-        <li><a href="#">優惠券</a></li>
+        <li><a href="#"
+          {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>個人資料
+        </a></li>
+        
+        <li><a href="#"
+          {% if request.resolver_match.url_name == 'address_list' %}class="active"{% endif %}>收件地址一覽
+        </a></li>
+
+        <li><a href="{% url 'orders:order_list' %}" 
+          {% if request.resolver_match.url_name == 'order_list' %}class="active"{% endif %}>訂單紀錄
+        </a></li>
+
+        <li><a href="#"
+          {% if request.resolver_match.url_name == 'returns' %}class="active"{% endif %}>退貨退款紀錄
+        </a></li>
+
+        <li><a href="#"
+          {% if request.resolver_match.url_name == 'coupons' %}class="active"{% endif %}>優惠券
+        </a></li>
       </ul>
     </aside>
  

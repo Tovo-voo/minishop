@@ -312,6 +312,13 @@
   padding: 1.7rem 0 2rem;
 }
 
+.list-filter-form {
+  display: flex;
+  gap: 1.1rem;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
 .list-field {
   display: grid;
   gap: 0.35rem;
@@ -342,6 +349,44 @@
   outline: none;
   border-bottom-color: #111;
 }
+
+.search-btn {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 3px;
+}
+
+.search-btn {
+  background: #f2504b;
+  color: #fff;
+}
+
+.filter-submit-btn {
+  background: #000;
+  color: #fff;
+  padding: 5px 10px;
+}
+
+.filter-submit-btn:hover {
+  color: #fff;
+  background: #f2504b;
+}
+
+.filter-clear-btn {
+  background-color: #000;
+  color: #ffff;
+}
+
+.filter-clear-btn:hover {
+  color: #fff;
+  background: #f2504b;
+}
+
 
 .order-list-page {
   padding-top: 0.1rem;

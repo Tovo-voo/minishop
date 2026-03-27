@@ -3,10 +3,6 @@
 {% load humanize %}
 
 
-
-
-
-
 {% block order_content %}
 <main class="list-main">
   <section class="list-page-head">
@@ -15,18 +11,28 @@
   </section>
 
   <section class="list-filter-row">
-    <div class="list-field search-field">
-      <label for="order-search">搜尋訂單</label>
-      <input id="order-search" type="search" placeholder="輸入訂單編號或商品名稱">
-    </div>
-    <div class="list-field">
-      <label for="start-date">開始日期</label>
-      <input id="start-date" type="date">
-    </div>
-    <div class="list-field">
-      <label for="end-date">結束日期</label>
-      <input id="end-date" type="date">
-    </div>
+    <form method="GET" action="" class="list-filter-form">
+      <div class="list-field search-field">
+        <label for="order-search">搜尋訂單</label>
+        <input id="order-search" name="q" type="search"
+               placeholder="輸入訂單編號或商品名稱"
+               value="{{ q }}">
+      </div>
+      <div class="list-field">
+        <label for="start-date">開始日期</label>
+        <input id="start-date" name="start_date" type="date"
+               value="{{ start_date }}">
+      </div>
+      <div class="list-field">
+        <label for="end-date">結束日期</label>
+        <input id="end-date" name="end_date" type="date"
+               value="{{ end_date }}">
+      </div>
+      <button type="submit" class="search-btn filter-submit-btn">搜尋</button>
+      {% if q or start_date or end_date %}
+      <a href="{% url 'orders:order_list' %}" class="search-btn filter-clear-btn">清除篩選</a>
+      {% endif %}
+    </form>
   </section>
 
   <section class="order-list-page">
@@ -35,6 +41,15 @@
       <p>查看所有歷史訂單</p>
     </div>
     <div class="list-divider"></div>
+
+    {% if q or start_date or end_date %}
+    <p class="filter-result-hint">
+      共找到 {{ orders|length }} 筆訂單
+      {% if q %}，關鍵字「{{ q }}」{% endif %}
+      {% if start_date %}，{{ start_date }} 起{% endif %}
+      {% if end_date %}，至 {{ end_date }}{% endif %}
+    </p>
+    {% endif %}
 
     {% if orders %}
     <div class="order-list-table">

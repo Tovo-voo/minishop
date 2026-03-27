@@ -8,6 +8,7 @@ from orders.models import Order, OrderItem
 import uuid
 from datetime import datetime
 from decimal import Decimal
+from django.db.models import Q
 
 
 # 確認訂單
@@ -370,8 +371,27 @@ def order_list_view(request):
     """
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
 
+    q = request.GET.get('q', '').strip()
+    start_date = request.GET.get('start_date', '').strip()
+    end_date = request.GET.get('end_date', '').strip()
+
+    if q:
+        orders = orders.filter(
+            Q(order_number__icontains=q) |      # 查詢條件icontains是不分大小寫得包含搜尋
+            Q(items__product__name__icontains=q)
+        ).distinct()    # 去除重複資料
+
+    if start_date:
+        orders = orders.filter(created_at__date__gte=start_date)   # gte大於等於這個日期
+        
+    if end_date:
+        orders = orders.filter(created_at__date__lte=end_date)     # lte小於等於這個日期
+
     context = {
         'orders' : orders,
+        'q': q,
+        'start_date': start_date,
+        'end_date': end_date,
     }
     return render(request, 'order/order_list.html', context)
 
