@@ -21,6 +21,7 @@ def checkout_view(request):
         # 一定要有購物車
         cart = request.session.get('cart')
         if not cart:
+            messages.error(request, '購物車是空的，無法建立訂單')
             return redirect('cart')
         
         # 商品與金額(和cart_view一樣，只顯示金額)

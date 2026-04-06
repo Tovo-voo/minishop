@@ -5,32 +5,42 @@
 
 {% block content %}
 <div class="auth-form-container">
+  {% for message in messages %}
+    <div class="alert alert-{{ message.tags }}" role="alert">
+      {{ message }}
+    </div>
+  {% endfor %}
 
   <h3 class="mb-4 text-center">註冊會員</h3>
-  <form method="POST" novalidate>
+  <form method="POST" id="register-form" novalidate>
     {% csrf_token %}
 
     <div class="mb-3">
       <label for="username" class="form-label">帳號</label>   
-      <input type="text" id="username" name="username" class="form-control" placholder="請輸入帳號" reqiured>
+      <input type="text" id="username" name="username" class="form-control" placeholder="請輸入帳號" required>
+      <div id="username-error" class="field-error">帳號不能為空</div>
     </div>
 
     <div class="mb-3">
       <label for="password" class="form-label">密碼</label>
-      <input type="password" id="password" name="password" class="form-control" placholder="請輸入密碼" reqiured>
+      <input type="password" id="password" name="password" class="form-control" placeholder="請輸入密碼" required>
+      <div id="password-error" class="field-error">密碼不能為空</div>
     </div>
 
     <div class="mb-3">
-      <label for="password2" class=form-label>確認密碼</label>
-      <input type="password" id="password2" name="password2" class="form-control" placholder="再次輸入密碼" reqiured>
+      <label for="password2" class="form-label">確認密碼</label>
+      <input type="password" id="password2" name="password2" class="form-control" placeholder="再次輸入密碼" required>
+      <div id="password2-error" class="field-error">密碼不能為空</div>
+      <div id="pwdigits-error" class="field-error">密碼不一致</div>
     </div>
 
     <div class="mb-3">
       <label for="phonenumber" class="form-label">手機號碼</label>
-      <input type="text" id="phonenumber" name="phonenumber" class="form-control" placholder="09xxxxxxxx" reqiured>
+      <input type="text" id="phonenumber" name="phonenumber" class="form-control" placeholder="09xxxxxxxx" required>
+      <div id="phone-error" class="field-error">手機號碼不能為空</div>
     </div>
         
-    <button type="submit" class="btn btn-primary w-100 py-2">註冊</button>
+    <button type="submit" class="btn-login w-100 py-2">註冊</button>
 
     <!-- 已有帳號 -->
     <p class="register-login-text mt-3">已有帳號了?

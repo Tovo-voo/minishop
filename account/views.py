@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Address
 from django.http import JsonResponse
+import re
 
 # authenticate:是Django內建方法，用來「驗證帳號密碼是否正確」
 # 第一次開登入頁是 GET請求 ，顯示頁面。按下登入是 POST請求，檢查帳號密碼
@@ -15,8 +16,13 @@ from django.http import JsonResponse
 # 登入功能
 def login_view(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        if not all([username, password]):
+            messages.error(request, '請填寫完整資訊')
+            return redirect('login')
+
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
@@ -34,7 +40,6 @@ def login_view(request):
 # 登出
 def logout_view(request):
     logout(request)
-    messages.success(request, '已成功登出')
     return redirect('Home')
 
 
@@ -43,10 +48,40 @@ def logout_view(request):
 def register_view(request):
     # 當使用者按下「送出」時，取得表單資料、檢查密碼、建立帳號
     if request.method == 'POST':
-        username = request.POST['username']
-        password = request.POST['password']
-        password2 = request.POST['password2']
-        phonenumber = request.POST['phonenumber']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        password2 = request.POST.get('password2')
+        phonenumber = request.POST.get('phonenumber')
+
+        if not all([username, password, password2, phonenumber]):
+            messages.error(request, '請完整填寫資訊')
+            return redirect('register')
+        
+        if len(username) < 4 or len(username) > 20:
+            messages.error(request, '使用者名稱長度錯誤')
+            return redirect('register')
+
+        if not re.match(r'^[\w.@#]+$', username):
+            messages.error(request, '使用者名稱只能包含英文、數字、_.@#')
+            return redirect('register')
+        
+        if not (re.search(r'[a-zA-Z]', username) and re.search(r'\d', username)):
+            messages.error(request, '使用者名稱至少需同時包含一個英文和數字')
+            return redirect('register')
+
+
+        if len(password) < 8 or len(password) > 16:
+            messages.error(request, '密碼長度不符')
+            return redirect('register')
+        
+        if not re.fullmatch(r'[\w@]+', password):
+            messages.error(request, '密碼只能包含英文、數字、_ 和 @')
+            return redirect('register')
+
+        if not (re.search(r'[a-zA-Z]', password) and re.search(r'\d', password)):
+            messages.error(request, '密碼至少需同時包含一個英文和數字')
+            return redirect('register')
+
 
         # 確認密碼是否一致
         if password != password2:
