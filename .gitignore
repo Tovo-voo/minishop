@@ -4,6 +4,7 @@ __pycache__/
 *.pyo
 *.pyd
 upload_images.py
+fix_encoding.py
 
 # Virtual Environment
 venv/
