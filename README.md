@@ -48,6 +48,7 @@ You can register a new account to explore the full features.
 - [ ] Product search / 商品搜尋
 - [ ] Product reviews / 商品評價
 - [ ] Multiple product images / 商品多圖
+- [ ] Mobile responsive design / 手機響應式設計
 - [ ] Refactor views to Class-Based Views (CBV) / 將 views 重構為類別基礎視圖
 
 ---
