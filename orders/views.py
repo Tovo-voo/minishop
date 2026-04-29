@@ -246,7 +246,7 @@ def address_create_view(request):
         street_address=street_address,
         postal_code=postal_code,
         is_default=Address.objects.filter(user=request.user).count() == 0   # 第一筆為預設
-        )
+    )
 
         
     return JsonResponse({
@@ -298,17 +298,17 @@ def address_detail_view(request, address_id):
         return JsonResponse({'success': False, 'error': '地址不存在'}, status=404)
     
     return JsonResponse({
-    'success': True,
-    'address': {
-        'id': address_id,
-        'receiver': address.receiver,
-        'phone': address.phone,
-        'city': address.city,
-        'district': address.district,
-        'street_address': address.street_address,
-        'postal_code': address.postal_code
-    }
-}, status=200)
+        'success': True,
+        'address': {
+            'id': address_id,
+            'receiver': address.receiver,
+            'phone': address.phone,
+            'city': address.city,
+            'district': address.district,
+            'street_address': address.street_address,
+            'postal_code': address.postal_code
+        }
+    }, status=200)
 
 
 @login_required
