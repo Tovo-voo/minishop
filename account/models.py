@@ -53,3 +53,27 @@ class Address(models.Model):
         super().save(*args, **kwargs)
 
 
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name="使用者")
+    city = models.CharField(max_length=10, blank=True, null=True, verbose_name="縣市")
+    district = models.CharField(max_length=20, blank=True, null=True, verbose_name="鄉鎮市區")
+    street_address = models.CharField(max_length=50, blank=True, null=True, verbose_name="街道地址")
+    postal_code = models.CharField(
+        max_length=6,
+        blank=True,
+        null=True,
+        verbose_name="郵遞區號"
+    )
+    phone = models.CharField(max_length=20, blank=True, null=True, verbose_name="手機號碼")
+
+    GENDER_CHOICES = [
+        ('male', '男性'),
+        ('female', '女性'),
+        ('private', '不公開'),
+    ]
+
+    gender = models.CharField(max_length=10, blank=True, null=True, choices=GENDER_CHOICES, verbose_name="性別")
+    birthday = models.DateField(blank=True, null=True, verbose_name="生日")
+    
+    created_at = models.DateTimeField(auto_now_add=True, verbose_name="建立時間")
+    update_at = models.DateTimeField(auto_now=True, verbose_name="更新時間")

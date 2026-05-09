@@ -4,6 +4,7 @@
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/cart.css' %}"> <!-- 有導覽列的css -->
 <link rel="stylesheet" href="{% static 'css/order.css' %}">
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock extra_head %}
  
 {% block body_class %}checkout-page{% endblock %}
@@ -23,8 +24,8 @@
         <p>我的帳戶</p>
       </div>
       <ul class="list-nav">
-        <li><a href="#"
-          {% if request.resolver_match.url_name == 'profile' %}class="active"{% endif %}>個人資料
+        <li><a href="{% url 'profile_info' %}"
+          {% if request.resolver_match.url_name == 'profile_info' %}class="active"{% endif %}>個人資料
         </a></li>
         
         <li><a href="#"

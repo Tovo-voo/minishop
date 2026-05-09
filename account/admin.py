@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Address
+from .models import Address, Profile
 
 @admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
@@ -9,3 +9,4 @@ class AddressAdmin(admin.ModelAdmin):
     list_editable = ['is_default']
 
 
+admin.site.register(Profile)

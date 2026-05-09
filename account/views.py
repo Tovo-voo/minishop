@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import User
-from .models import Address
+from .models import Address, Profile
 from django.http import JsonResponse
-import re
+import re, datetime
 
 # authenticate:是Django內建方法，用來「驗證帳號密碼是否正確」
 # 第一次開登入頁是 GET請求 ，顯示頁面。按下登入是 POST請求，檢查帳號密碼
@@ -99,6 +100,11 @@ def register_view(request):
             password = password
         )
 
+        profile = Profile.objects.get_or_create(
+            user=user,
+            phone=phonenumber
+        )
+
         # 註冊完成提示
         messages.success(request, '註冊成功，請重新登入頁面')
         return redirect('login')
@@ -134,3 +140,57 @@ def add_address_view(request):
         })
 
     return JsonResponse({'success':False}, status=400)
+
+
+@login_required
+def profile_view(request):
+    """個人資料"""
+    if request.method == 'POST':
+        user = request.user
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.save()
+        gender = request.POST.get('gender')
+        birthday = request.POST.get('birthday')
+        print(f"gender: {gender}, birthday:{birthday}")
+        phone = request.POST.get('phone')
+        city = request.POST.get('city')
+        district = request.POST.get('district')
+        street_address = request.POST.get('street_address')
+        postal_code = request.POST.get('postal_code')
+
+        defaults={
+            'gender': gender,
+            'birthday': birthday,
+            'city': city,
+            'district': district,
+            'street_address': street_address,
+            'postal_code': postal_code,
+        }
+
+        if phone:
+            defaults['phone'] = phone
+
+        if not all([city, district, street_address, postal_code]):
+            return JsonResponse({'success': False}, status=400)
+
+
+        profile, created = Profile.objects.update_or_create(
+            user=request.user,
+            defaults=defaults,
+        )
+    
+        return JsonResponse({
+            'success': True,
+        }, status=201)
+
+    else:
+        profile, created = Profile.objects.get_or_create(user=request.user)
+        context = {
+            'profile': profile,
+            'birth_years': range(1940, datetime.date.today().year + 1),
+            'birth_months': range(1,13),
+            'birth_days': range(1,32),
+        }
+
+        return render(request, 'accounts/profile_info.html', context)

@@ -1,0 +1,49 @@
+#profile-form {
+  padding-top: 20px;
+  padding-left: 20px;
+}
+
+.profile-field {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.profile-label {
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.profile-inputs {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-actions {
+  margin-top: 20px;
+  margin-left: 120px;
+}
+
+.btn-profile-cancel {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid #000;
+  background: none;
+  padding: 10px 40px;
+  font-size: 16px;
+  color: #000000;
+  margin-right: 10px;
+}
+
+.btn-profile-save {
+  display: inline-block;
+  text-decoration: none;
+  cursor: pointer;
+  border: 1px solid #000;
+  background: black;
+  padding: 10px 40px;
+  font-size: 16px;
+  color: #ffffff;
+}

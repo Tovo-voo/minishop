@@ -1,0 +1,124 @@
+{% extends "core/base_order_account.html" %}
+{% load static %}
+
+{% block main_content %}
+
+<div class="list-page-head">
+  <h1>個人資料</h1>
+  <p>填寫個人資料可享有更多會員專屬權益</p>
+</div>
+
+<div id="profile-message" class="proflie-alert"></div>
+<form id="profile-form">
+  {% csrf_token %}
+
+  <!--姓 與 名-->
+  <div class="profile-field">
+    <label class="profile-label">姓名<span class="required">※</span></label>
+    <div class="profile-inputs">      
+      <input type="text" name="last_name" class="profile-input" placeholder="姓"
+        value="{{ request.user.last_name }}">
+      <input type="text" name="first_name" class="profile-input" placeholder="名"
+        value="{{ request.user.first_name }}">   
+    </div>
+  </div>
+
+  <!-- 性別 -->
+  <div class="profile-field">
+    <label class="profile-label">性別<span class="required">※</span></label>
+    <div class="profile-inputs profile-radio-group">
+      <label class="gender-radio">
+        <input type="radio" name="gender" value="male"
+          {% if profile.gender == 'male' %}checked{% endif %}> 男
+      </label>
+      <label class="gender-radio">
+        <input type="radio" name="gender" value="female"
+          {% if profile.gender == 'female' %}checked{% endif %}> 女
+      </label>
+      <label class="gender-radio">
+        <input type="radio" name="gender" value="private"
+          {% if profile.gender == 'private' %}checked{% endif %}> 不公開
+      </label>                
+    </div>
+  </div>
+
+  <!-- 生日 -->
+  <div class="profile-field">
+    <label class="profile-label">生日<span class="required">※</span></label>
+    <div class="profile-inputs profile-birthday">
+      <select name="birth_year" class="profile-select">
+        <option value="">年</option>
+        {% for year in birth_years %}
+        <option value="{{ year }}"
+          {% if profile.birthday and profile.birthday.year == year %}selected{% endif %}>
+          {{ year }}年
+        </option>
+        {% endfor %}
+      </select>
+
+      <select name="birth_month" class="profile-select">
+        <option value="">月</option>
+        {% for month in birth_months %}
+        <option value="{{ month }}"
+          {% if profile.birthday and profile.birthday.month == month %}selected{% endif %}>
+          {{ month }}月
+        </option>
+        {% endfor %}
+      </select>
+
+      <select name="birth_day" class="profile-select">
+        <option value="">日</option>
+        {% for day in birth_days %}
+        <option value="{{ day }}"
+          {% if profile.birthday and profile.birthday.day == day %}selected{% endif %}>
+          {{ day }}日
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  
+  <!-- 通訊地址 -->
+  <div class="profile-field">
+    <label class="profile-label">通訊地址<span class="required">※</span></label>
+    <div class="profile-inputs profile-address">
+      <select name="city" id="profile-city" class="profile=select">
+        <option value="">請選擇縣市</option>
+      </select>
+      <select name="district" id="profile-district" class="profile=select">
+        <option value="">請選擇鄉鎮市區</option>
+      </select>
+      <input type="text" name="street_address" id="profile-street" class="profile-input profile-input-full"
+        placeholder="街道地址" value="{{ profile.street_address|default:'' }}">
+      <input type="hidden" name="postal_code" id="profile-postal" value="{{ profile.postal_code|default:'' }}">
+    </div>
+  </div>
+
+  <!-- 手機 -->
+  <div class="profile-field">
+    <label class="profile-label"></label>
+    <div class="profile-inputs">
+    {% if profile.phone %}
+      <span class="profile-readonly">{{ profile.phone }}</span>
+    {% else %}
+      <input type="text" name="phone" class="profile-readonly" placeholder="09xxxxxxxx">
+    {% endif %}
+    </div>
+  </div>
+
+  <!-- 按鈕 -->
+  <div class="profile-actions">
+    <button type="button" class="btn-profile-cancel" onclick="resetForm()">取消</button>
+    <button type="button" class="btn-profile-save" onclick="saveProfile()">儲存</button>      
+  </div>
+</form>
+
+
+<script>
+  const savedCity = "{{ profile.city|default:'' }}";
+  const savedDistrict = "{{ profile.district|default:'' }}";
+</script>
+
+<script src="{% static 'js/taiwan_postal.js' %}"></script>
+<script src="{% static 'js/profile.js' %}"></script>
+{% endblock %}
